@@ -1,0 +1,2024 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yankees Prop Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,800;9..144,900&family=JetBrains+Mono:wght@400;500;700&family=Inter+Tight:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ==========================================================================
+   D-Backs Prop Lab — editorial sports-almanac aesthetic
+   Palette: Sedona red, desert sand, deep ink, Sonoran teal accent
+   ========================================================================== */
+
+:root {
+  --ink:        #14110f;
+  --ink-soft:   #2a2422;
+  --paper:      #f4ede1;
+  --paper-deep: #ebe1cf;
+  --rule:       #1a1715;
+  --rule-soft:  #c9bda5;
+
+  --sedona:     #a71930;   /* D-Backs primary red */
+  --sedona-deep:#7a0f1f;
+  --copper:     #c8842b;
+  --turquoise:  #1d5e6b;
+  --sage:       #6b7c5d;
+
+  --p-strong:   #1d5e6b;
+  --p-mid:      #c8842b;
+  --p-weak:     #8a7d6b;
+
+  --shadow-1:   0 1px 0 rgba(0,0,0,0.04);
+  --shadow-2:   0 18px 40px -22px rgba(20,17,15,0.35);
+
+  --ff-display: 'Fraunces', 'Cormorant Garamond', Georgia, serif;
+  --ff-body:    'Inter Tight', -apple-system, BlinkMacSystemFont, sans-serif;
+  --ff-mono:    'JetBrains Mono', 'SF Mono', monospace;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--ff-body);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'tnum' 1, 'cv11' 1;
+}
+
+body {
+  background-image:
+    radial-gradient(circle at 0% 0%, rgba(167,25,48,0.04), transparent 40%),
+    radial-gradient(circle at 100% 100%, rgba(29,94,107,0.03), transparent 50%),
+    repeating-linear-gradient(
+      0deg,
+      rgba(0,0,0,0.012) 0,
+      rgba(0,0,0,0.012) 1px,
+      transparent 1px,
+      transparent 4px
+    );
+  min-height: 100vh;
+}
+
+a { color: var(--sedona); text-decoration: none; border-bottom: 1px solid rgba(167,25,48,0.3); }
+a:hover { border-bottom-color: var(--sedona); }
+
+/* ============================================================ MASTHEAD */
+.masthead {
+  background: var(--ink);
+  color: var(--paper);
+  border-bottom: 4px double var(--sedona);
+}
+.masthead-inner {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 22px 32px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.logo-block { display: flex; align-items: center; gap: 18px; }
+.logo-mark {
+  width: 56px;
+  height: 56px;
+  background: var(--sedona);
+  color: var(--paper);
+  font-family: var(--ff-display);
+  font-weight: 900;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  display: grid;
+  place-items: center;
+  border: 2px solid var(--paper);
+  box-shadow: 4px 4px 0 var(--sedona-deep);
+  font-style: italic;
+}
+.logo-text h1 {
+  font-family: var(--ff-display);
+  font-weight: 900;
+  font-size: 30px;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-style: italic;
+}
+.subtitle {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--rule-soft);
+  margin-top: 4px;
+  font-weight: 500;
+}
+.masthead-meta { display: flex; align-items: center; gap: 18px; }
+.meta-item { display: flex; flex-direction: column; align-items: flex-end; }
+.meta-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.2em;
+  color: var(--rule-soft);
+}
+.meta-value { font-family: var(--ff-mono); font-size: 13px; font-weight: 500; }
+.refresh-btn {
+  background: transparent;
+  border: 1px solid var(--rule-soft);
+  color: var(--paper);
+  padding: 8px 14px;
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-transform: uppercase;
+}
+.refresh-btn:hover { background: var(--sedona); border-color: var(--sedona); }
+
+/* ============================================================ GAME STRIP */
+.game-strip {
+  background: var(--paper-deep);
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 18px 32px;
+}
+.game-card {
+  max-width: 1480px;
+  margin: 0 auto;
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+}
+.game-side { display: flex; flex-direction: column; padding: 0 22px; min-width: 0; flex: 1; }
+.game-side:first-child { padding-left: 0; }
+.game-tag {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink-soft); font-weight: 600; margin-bottom: 4px;
+}
+.game-team {
+  font-family: var(--ff-display);
+  font-weight: 600;
+  font-size: 18px;
+  letter-spacing: -0.01em;
+  line-height: 1.2;
+}
+.game-venue { font-style: italic; }
+.game-weather { font-family: var(--ff-mono); font-size: 13px; font-weight: 400; letter-spacing: 0; }
+.game-divider {
+  width: 1px;
+  background: var(--rule-soft);
+  margin: 4px 0;
+}
+.game-loading, .game-none {
+  max-width: 1480px; margin: 0 auto;
+  font-family: var(--ff-display); font-style: italic; color: var(--ink-soft);
+}
+.game-none small { display: block; font-family: var(--ff-body); font-style: normal; font-size: 11px; margin-top: 2px; color: var(--ink-soft); }
+
+/* ============================================================ DISCLAIMER */
+.disclaimer-bar {
+  background: var(--ink);
+  color: var(--rule-soft);
+  font-size: 12px;
+  padding: 10px 32px;
+  text-align: center;
+  font-family: var(--ff-body);
+}
+.disclaimer-bar strong { color: var(--copper); font-weight: 600; }
+.disclaimer-bar a { color: var(--paper); border-bottom-color: var(--rule-soft); }
+
+/* ============================================================ MAIN */
+.content {
+  max-width: 1480px;
+  margin: 0 auto;
+  padding: 32px;
+}
+.content-header {
+  display: flex; justify-content: space-between; align-items: flex-end;
+  border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 24px;
+}
+.content-header h2 {
+  font-family: var(--ff-display);
+  font-weight: 800;
+  font-size: 36px;
+  letter-spacing: -0.025em;
+  font-style: italic;
+}
+.legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--ink-soft); }
+.legend-item { display: flex; align-items: center; gap: 6px; }
+.dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+.dot-strong { background: var(--p-strong); }
+.dot-mid    { background: var(--p-mid); }
+.dot-weak   { background: var(--p-weak); }
+
+.players-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+  gap: 18px;
+}
+
+.loading-pulse, .empty, .error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 60px 20px;
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-size: 18px;
+  color: var(--ink-soft);
+}
+.loading-pulse { animation: pulse 1.4s ease-in-out infinite; }
+@keyframes pulse { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+.error { color: var(--sedona); }
+
+/* ============================================================ PLAYER CARD */
+.player-card {
+  background: var(--paper);
+  border: 1px solid var(--rule-soft);
+  border-top: 3px solid var(--ink);
+  padding: 20px;
+  position: relative;
+  animation: cardIn 0.5s ease-out backwards;
+  box-shadow: var(--shadow-1);
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.player-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+@keyframes cardIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.card-head {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  border-bottom: 1px dotted var(--rule-soft); padding-bottom: 12px; margin-bottom: 14px;
+  gap: 12px;
+}
+.card-name { display: flex; align-items: baseline; gap: 8px; }
+.card-num {
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  color: var(--copper);
+  font-weight: 700;
+}
+.card-name h3 {
+  font-family: var(--ff-display);
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  font-style: italic;
+}
+.card-tags { display: flex; gap: 4px; flex-wrap: wrap; justify-content: flex-end; }
+.tag {
+  font-family: var(--ff-mono);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--paper-deep);
+  border: 1px solid var(--rule-soft);
+  padding: 3px 7px;
+  color: var(--ink-soft);
+}
+.tag-hand { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.tag-vs { background: var(--sedona); color: var(--paper); border-color: var(--sedona); }
+
+/* hero probability blocks */
+.hero-prob {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 14px;
+}
+.prob-block {
+  text-align: center;
+  padding: 12px 4px 10px;
+  background: var(--paper-deep);
+  border-bottom: 3px solid var(--p-weak);
+}
+.prob-block.p-strong { border-bottom-color: var(--p-strong); background: rgba(29,94,107,0.06); }
+.prob-block.p-mid    { border-bottom-color: var(--p-mid); background: rgba(200,132,43,0.07); }
+.prob-block.p-weak   { border-bottom-color: var(--p-weak); }
+.prob-value {
+  font-family: var(--ff-display);
+  font-weight: 800;
+  font-size: 24px;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-feature-settings: 'tnum' 1;
+}
+.prob-block.p-strong .prob-value { color: var(--p-strong); }
+.prob-block.p-mid    .prob-value { color: var(--p-mid); }
+.prob-label {
+  font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink-soft); margin-top: 4px; font-weight: 600;
+}
+
+/* expected value strip */
+.exp-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0;
+  border: 1px solid var(--rule-soft);
+  margin-bottom: 12px;
+}
+.exp {
+  padding: 8px 4px;
+  text-align: center;
+  border-right: 1px solid var(--rule-soft);
+}
+.exp:last-child { border-right: none; }
+.exp span {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink-soft); display: block; font-weight: 600;
+}
+.exp b { font-family: var(--ff-mono); font-size: 14px; font-weight: 600; }
+
+/* O/U table */
+.ou-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 12px;
+  font-size: 12px;
+}
+.ou-table th, .ou-table td {
+  border-bottom: 1px solid var(--rule-soft);
+  padding: 6px 8px;
+  text-align: center;
+  font-family: var(--ff-mono);
+  font-weight: 500;
+}
+.ou-table th {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-soft);
+  font-weight: 700;
+  background: var(--paper-deep);
+}
+.ou-table td:first-child {
+  text-align: left;
+  font-family: var(--ff-body);
+  font-size: 11px;
+  color: var(--ink-soft);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.ou-table td.p-strong { color: var(--p-strong); font-weight: 700; }
+.ou-table td.p-mid    { color: var(--p-mid); font-weight: 600; }
+
+/* season + splits strips */
+.stats-strip, .splits-strip {
+  display: grid;
+  gap: 0;
+  border: 1px solid var(--rule-soft);
+  margin-bottom: 8px;
+}
+.stats-strip { grid-template-columns: repeat(6, 1fr); }
+.stats-strip > div {
+  padding: 6px 2px;
+  text-align: center;
+  border-right: 1px solid var(--rule-soft);
+}
+.stats-strip > div:last-child { border-right: none; }
+.stats-strip span {
+  font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--ink-soft); display: block; font-weight: 700;
+}
+.stats-strip b { font-family: var(--ff-mono); font-size: 12px; font-weight: 600; }
+
+.splits-strip { grid-template-columns: 1fr 1fr; }
+.split-block {
+  padding: 8px 10px;
+  border-right: 1px solid var(--rule-soft);
+}
+.split-block:last-child { border-right: none; }
+.split-label {
+  font-size: 9px; text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--ink-soft); display: block; font-weight: 700; margin-bottom: 2px;
+}
+.split-line { font-family: var(--ff-mono); font-size: 11px; font-weight: 500; }
+.split-line em { color: var(--ink-soft); font-style: italic; font-size: 10px; }
+
+.diag-btn {
+  width: 100%;
+  background: transparent;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+  padding: 8px;
+  font-family: var(--ff-body);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.15s;
+}
+.diag-btn:hover { background: var(--ink); color: var(--paper); }
+
+/* skip / error cards */
+.player-card-skip { border-top-color: var(--rule-soft); opacity: 0.7; }
+.card-skip h3, .card-error h3 { font-family: var(--ff-display); font-style: italic; font-size: 18px; margin-bottom: 6px; }
+.card-skip .pos, .card-error .pos { font-size: 10px; color: var(--ink-soft); font-style: normal; font-family: var(--ff-mono); }
+.card-skip p, .card-error p { font-size: 12px; color: var(--ink-soft); }
+
+/* ============================================================ MODAL */
+.modal-backdrop {
+  position: fixed; inset: 0;
+  background: rgba(20,17,15,0.65);
+  display: grid; place-items: center;
+  z-index: 100;
+  padding: 20px;
+}
+.modal {
+  background: var(--paper);
+  max-width: 600px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding: 32px;
+  position: relative;
+  border: 3px solid var(--ink);
+  box-shadow: 8px 8px 0 var(--sedona);
+}
+.modal-close {
+  position: absolute;
+  top: 12px; right: 16px;
+  background: transparent; border: none;
+  font-size: 32px; line-height: 1;
+  cursor: pointer; color: var(--ink);
+}
+.modal h2 { font-family: var(--ff-display); font-style: italic; font-size: 28px; letter-spacing: -0.02em; }
+.modal-pos { font-family: var(--ff-mono); font-size: 12px; font-style: normal; color: var(--ink-soft); }
+.modal-sub { color: var(--ink-soft); font-size: 12px; margin-bottom: 20px; }
+.modal h3 {
+  font-family: var(--ff-body); font-weight: 700; font-size: 12px;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  margin: 20px 0 8px; padding-bottom: 4px;
+  border-bottom: 1px solid var(--rule-soft);
+  color: var(--sedona);
+}
+.modal-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.modal-table tr { border-bottom: 1px dotted var(--rule-soft); }
+.modal-table tr:last-child { border-bottom: none; }
+.modal-table td { padding: 6px 0; font-family: var(--ff-mono); }
+.modal-table td:first-child { font-family: var(--ff-body); color: var(--ink-soft); width: 60%; }
+.modal-table .row-result { background: var(--paper-deep); }
+.modal-table .row-result td { padding: 8px 6px; }
+
+/* ============================================================ FOOTER */
+.footer {
+  border-top: 1px solid var(--rule-soft);
+  padding: 24px 32px 40px;
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: center;
+  max-width: 1480px;
+  margin: 24px auto 0;
+}
+.footer code { font-family: var(--ff-mono); background: var(--paper-deep); padding: 1px 4px; }
+
+/* ============================================================ RESPONSIVE */
+@media (max-width: 720px) {
+  .masthead-inner { flex-direction: column; align-items: flex-start; gap: 14px; }
+  .game-card { flex-direction: column; gap: 8px; }
+  .game-divider { display: none; }
+  .game-side { padding: 0; }
+  .content { padding: 18px; }
+  .content-header h2 { font-size: 26px; }
+  .players-grid { grid-template-columns: 1fr; }
+}
+
+/* ============================================================ ODDS META BAR */
+.odds-meta-bar {
+  padding: 9px 32px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--rule-soft);
+  font-family: var(--ff-body);
+}
+.odds-meta-bar.status-ok   { background: rgba(29,94,107,0.10);  color: var(--ink); }
+.odds-meta-bar.status-warn { background: rgba(200,132,43,0.14); color: var(--ink); }
+.odds-meta-bar.status-err  { background: rgba(167,25,48,0.10);  color: var(--ink); }
+.odds-meta-bar code { font-family: var(--ff-mono); background: var(--paper); padding: 1px 5px; font-size: 11px; }
+.om-tag {
+  font-family: var(--ff-mono); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.12em; padding: 2px 8px;
+  background: var(--ink); color: var(--paper);
+  text-transform: uppercase;
+}
+.om-credits {
+  margin-left: auto; font-family: var(--ff-mono); font-size: 11px;
+  color: var(--ink-soft); font-weight: 500;
+}
+.om-stale {
+  margin-left: auto;
+  font-family: var(--ff-mono); font-size: 10px; font-weight: 600;
+  color: #92400e;
+  background: rgba(251, 191, 36, 0.15);
+  padding: 2px 8px; border-radius: 3px;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+
+/* ============================================================ EDGES BLOCK */
+.edges-block {
+  margin-bottom: 12px;
+  border: 1px solid var(--ink);
+  background: linear-gradient(180deg, var(--paper) 0%, var(--paper-deep) 100%);
+  overflow-x: auto;          /* graceful fallback if a row is still too wide */
+}
+.edges-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 7px 10px;
+  background: var(--ink); color: var(--paper);
+}
+.edges-title {
+  font-family: var(--ff-display); font-style: italic; font-weight: 700;
+  font-size: 13px; letter-spacing: -0.01em;
+}
+.edges-sub {
+  font-family: var(--ff-mono); font-size: 9px; letter-spacing: 0.05em;
+  color: var(--rule-soft); text-transform: uppercase;
+}
+.edges-table {
+  width: 100%; border-collapse: collapse; font-size: 10.5px; table-layout: auto;
+}
+.edges-table th {
+  font-family: var(--ff-mono); font-size: 9px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.06em;
+  color: var(--ink-soft); padding: 4px 4px; text-align: left;
+  border-bottom: 1px solid var(--rule-soft);
+  white-space: nowrap;
+}
+/* Headers for the numeric columns (Price → Stake) right-align to match
+   their data cells (.ed-price, .ed-mp, .ed-fp, .ed-edge, .ed-conf, .ed-stake
+   are all text-align: right). Without this, headers sat 2-ish chars to the
+   left of the column they label. */
+.edges-table th:nth-child(n+3) { text-align: right; }
+.edges-table td {
+  padding: 4px 4px; border-bottom: 1px dotted var(--rule-soft);
+  font-family: var(--ff-mono); font-weight: 500;
+  white-space: nowrap;
+}
+.edges-table tr:last-child td { border-bottom: none; }
+.edges-table tr.edge-strong { background: rgba(29,94,107,0.10); }
+.edges-table tr.edge-strong .ed-edge b { color: var(--p-strong); }
+.edges-table tr.edge-mid    { background: rgba(29,94,107,0.04); }
+.edges-table tr.edge-mid    .ed-edge b { color: var(--p-strong); }
+.edges-table tr.edge-weak   .ed-edge b { color: var(--copper); }
+.edges-table tr.edge-neg    .ed-edge b { color: var(--ink-soft); }
+.edges-table tr.edge-neg td { color: var(--ink-soft); opacity: 0.75; }
+.ed-mkt { font-family: var(--ff-body); font-size: 11px; font-weight: 500; }
+.ed-book { width: 1%; }
+.book-pill {
+  font-family: var(--ff-mono); font-size: 9px; font-weight: 700;
+  padding: 2px 6px; letter-spacing: 0.05em; color: var(--paper);
+  background: var(--ink-soft);
+}
+.book-pill.book-draftkings { background: #16a34a; }    /* DK green */
+.book-pill.book-fanduel    { background: #1d4e89; }    /* FD blue (legacy — kept for any cached edges) */
+.book-pill.book-betmgm     { background: #b8860b; }    /* MGM gold (legacy — kept for any cached edges) */
+.book-pill.book-williamhill_us { background: #4b0082; } /* Caesars purple */
+.ed-price { text-align: right; }
+.ed-mp, .ed-fp { text-align: right; color: var(--ink-soft); }
+.ed-edge { text-align: right; }
+.ed-kelly { text-align: right; color: var(--ink-soft); font-size: 10px; }
+.ed-conf  { text-align: right; font-family: var(--ff-mono); font-size: 10.5px; font-weight: 600; }
+.ed-conf.conf-strong { color: #15803d; }
+.ed-conf.conf-mid    { color: #b45309; }
+.ed-conf.conf-weak   { color: #b53a30; }
+.ed-stake { text-align: right; font-weight: 600; padding-right: 8px !important; }
+
+.modal-backdrop[hidden] { display: none !important; }
+
+/* ============================================================ TOP PICKS */
+.top-picks {
+  margin: 0 0 18px;
+  border: 2px solid var(--ink);
+  background: linear-gradient(180deg, #fef9e8 0%, #fdf3d3 100%);  /* warm gold */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.top-picks[hidden] { display: none; }
+.tp-head {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 8px 14px;
+  background: var(--ink); color: var(--paper);
+}
+.tp-title {
+  font-family: var(--ff-display); font-style: italic; font-weight: 800;
+  font-size: 16px; letter-spacing: -0.01em;
+}
+.tp-sub {
+  font-family: var(--ff-mono); font-size: 15px; font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--rule-soft); text-transform: uppercase;
+}
+.tp-sub .tp-ev-pos { color: #6fdc99; }
+.tp-sub .tp-ev-neg { color: #e07a7a; }
+.tp-grid { padding: 6px 0; }
+.tp-row {
+  display: grid;
+  grid-template-columns: 28px 1.4fr 1.6fr 50px 60px 70px 75px 64px 70px 70px;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px;
+  border-bottom: 1px dotted rgba(0,0,0,0.10);
+  font-family: var(--ff-mono); font-size: 13px;
+}
+.tp-ev { text-align: right; font-weight: 700; }
+.tp-ev.ev-pos { color: #2a7a4a; }
+.tp-ev.ev-neg { color: #a04040; }
+.tp-row:last-child { border-bottom: none; }
+.tp-num {
+  font-weight: 900; font-size: 18px; color: var(--ink);
+  font-family: var(--ff-display);
+}
+.tp-player { font-family: var(--ff-body); font-weight: 700; font-size: 14px; }
+.tp-player-link { color: inherit; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; }
+.tp-player-link:hover { text-decoration: underline; text-underline-offset: 3px; }
+.tp-bet { color: var(--ink-soft); }
+.tp-book { text-align: center; }
+.tp-price { text-align: right; font-weight: 600; }
+.tp-edge { text-align: right; font-weight: 700; color: var(--p-strong); }
+.tp-conf { text-align: right; color: #15803d; font-weight: 600; }
+.tp-conf.conf-strong { color: #15803d; }
+.tp-conf.conf-mid    { color: #b45309; }
+.tp-conf.conf-weak   { color: #b53a30; }
+/* conf² shadow rank — green=agrees, amber=disagrees, grey=falls out */
+.tp-c2 { text-align: right; font-size: 11px; font-weight: 700; letter-spacing: 0.02em; }
+.tp-c2-match { color: #15803d; }
+.tp-c2-diff  { color: #b45309; }
+.tp-c2-out   { color: #b91c1c; font-weight: 800; }
+.tp-stake { text-align: right; font-weight: 800; font-size: 14px; color: var(--ink); }
+
+.tp-parlay {
+  display: grid;
+  grid-template-columns: auto auto 1fr auto auto;
+  align-items: baseline;
+  gap: 14px;
+  padding: 10px 14px;
+  border-top: 2px solid var(--ink);
+  background: rgba(0,0,0,0.04);
+  font-family: var(--ff-mono); font-size: 13px;
+}
+.tp-parlay-label {
+  font-family: var(--ff-display); font-style: italic; font-weight: 800;
+  font-size: 14px; color: var(--ink); text-transform: uppercase; letter-spacing: 0.03em;
+}
+.tp-parlay-price { font-weight: 700; font-size: 15px; color: var(--ink); }
+.tp-parlay-meta  { color: var(--ink-soft); font-size: 11px; letter-spacing: 0.02em; }
+.tp-parlay-edge  { font-weight: 800; color: var(--p-strong); }
+.tp-parlay-stake { font-weight: 800; font-size: 14px; color: var(--ink); }
+
+.tp-parlay-override {
+  background: rgba(0,0,0,0.06);
+  border-top: 1px dotted rgba(0,0,0,0.18);
+}
+
+/* Leg-picker chips: lets the user choose which N picks to use in the parlay calc.
+   Keeps the .tp-parlay 2px solid top border so the panel divider sits ABOVE the
+   chip row (chips are visually grouped with the parlay panel they drive). */
+.tp-parlay-legpicker {
+  grid-template-columns: auto 1fr;
+  background: rgba(0,0,0,0.05);
+  align-items: center;
+}
+.tp-parlay-legpicker + .tp-parlay-summary {
+  border-top: 1px dotted rgba(0,0,0,0.18);
+}
+.tp-leg-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.tp-leg-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  border: 1px solid rgba(0,0,0,0.25);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.tp-leg-chip input[type="checkbox"] {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+  width: 0; height: 0;
+}
+.tp-leg-chip-num {
+  display: inline-block;
+  min-width: 14px;
+  text-align: center;
+  font-weight: 800;
+  color: var(--ink);
+}
+.tp-leg-chip.is-on {
+  background: var(--p-strong, #15803d);
+  border-color: var(--p-strong, #15803d);
+  color: #fff;
+}
+.tp-leg-chip.is-on .tp-leg-chip-num { color: #fff; }
+.tp-leg-chip:hover { border-color: var(--ink); }
+.tp-parlay-input-wrap { display: flex; align-items: center; }
+.tp-parlay-input {
+  width: 80px;
+  padding: 4px 8px;
+  font-family: var(--ff-mono);
+  font-size: 14px;
+  font-weight: 700;
+  border: 1px solid var(--ink);
+  border-radius: 3px;
+  background: var(--paper);
+  color: var(--ink);
+  text-align: center;
+}
+.tp-parlay-input:focus {
+  outline: 2px solid var(--p-strong);
+  outline-offset: 1px;
+}
+
+.tp-parlay-verdict {
+  padding: 10px 14px;
+  border-top: 1px dotted rgba(0,0,0,0.18);
+  background: rgba(0,0,0,0.04);
+  font-family: var(--ff-mono);
+  font-size: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.tp-parlay-verdict[hidden] { display: none; }
+.tpv-headline {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+}
+.tpv-headline.tpv-headline-parlay { color: #15803d; }
+.tpv-grade {
+  font-family: var(--ff-display);
+  font-style: italic;
+  font-weight: 900;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.tpv-grade-good      { color: #15803d; }
+.tpv-grade-boosted   { color: #15803d; }
+.tpv-grade-acceptable{ color: #ca8a04; }
+.tpv-grade-poor      { color: #b45309; }
+.tpv-grade-donation  { color: #9a3412; }
+.tpv-reason  { color: var(--ink); }
+.tpv-compare { color: var(--ink-soft); font-size: 11px; }
+
+@media (max-width: 720px) {
+  .tp-parlay {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+  }
+  .tp-parlay-label { grid-column: 1 / 2; grid-row: 1; }
+  .tp-parlay-price { grid-column: 2 / 3; grid-row: 1; text-align: right; }
+  .tp-parlay-meta  { grid-column: 1 / 4; grid-row: 2; }
+  .tp-parlay-edge  { grid-column: 1 / 2; grid-row: 1; display: none; }
+  .tp-parlay-stake { grid-column: 3 / 4; grid-row: 1; }
+  .tp-parlay.tp-parlay-legpicker {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto;
+  }
+  .tp-parlay-legpicker .tp-parlay-label { grid-column: 1; grid-row: 1; }
+  .tp-parlay-legpicker .tp-leg-chips    { grid-column: 1; grid-row: 2; justify-content: flex-start; }
+}
+
+@media (max-width: 720px) {
+  .tp-row {
+    grid-template-columns: 24px auto 1fr 52px 60px;
+    grid-template-rows: auto auto;
+    row-gap: 4px;
+    column-gap: 8px;
+    padding: 8px 10px;
+  }
+  .tp-num    { grid-row: 1 / 3; }
+  .tp-stake  { grid-column: 2 / 3; grid-row: 1; text-align: left; }
+  .tp-player { grid-column: 3 / 4; grid-row: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .tp-book   { grid-column: 4 / 5; grid-row: 1; }
+  .tp-price  { grid-column: 5 / 6; grid-row: 1; }
+  .tp-bet    { grid-column: 2 / 6; grid-row: 2; font-size: 12px; }
+  .tp-edge   { display: none; }
+  .tp-conf   { display: none; }
+  .tp-c2     { display: none; }
+}
+
+/* Side abbreviation toggle — desktop shows full "Over" / "Under",
+   mobile @media block below flips to "O" / "U" to fit cramped widths. */
+.tp-bet .side-abbrev { display: none; }
+
+/* ============================================================
+   Mobile phone-portrait (≤480px) — show only the bet essentials.
+   Desktop ≥481px is untouched.
+   Per-card: only player name + edges (Prop / Price / Edge / Conf / Stake).
+   ============================================================ */
+@media (max-width: 480px) {
+  /* Side abbreviation: flip Over/Under → O/U */
+  .tp-bet .side-full { display: none; }
+  .tp-bet .side-abbrev { display: inline; }
+
+  /* Container & grid */
+  .content { padding: 8px 6px; }
+  .players-grid { grid-template-columns: 1fr; gap: 8px; }
+  .player-card { padding: 10px 8px; }
+
+  /* Hide non-essential card sections */
+  .player-card .hero-prob,
+  .player-card .exp-row,
+  .player-card .ou-table,
+  .player-card .stats-strip,
+  .player-card .splits-strip,
+  .player-card .card-tags,
+  .player-card .diag-btn {
+    display: none;
+  }
+
+  /* Tighten card header */
+  .card-head { margin-bottom: 4px; padding-bottom: 4px; }
+  .card-head h3 { font-size: 15px; line-height: 1.2; }
+  .card-num { font-size: 11px; }
+
+  /* Edges table — hide Book (col 2), Model (col 4), Fair (col 5).
+     Keep: Prop / Price / Edge / Conf / Stake. */
+  .edges-table th:nth-child(2), .edges-table td:nth-child(2),
+  .edges-table th:nth-child(4), .edges-table td:nth-child(4),
+  .edges-table th:nth-child(5), .edges-table td:nth-child(5) {
+    display: none;
+  }
+  .edges-table { font-size: 11px; }
+  .edges-table th, .edges-table td { padding: 4px 3px; }
+
+  /* Header / legend / meta — strip user-education + timestamps clutter */
+  .masthead-meta { display: none; }
+  .content-header .legend { display: none; }
+  .logo-text { font-size: 13px; }
+  .subtitle { font-size: 11px; }
+
+  /* Game strip & odds-meta bar — tighten */
+  .game-strip, .odds-meta-bar { padding: 6px 8px; font-size: 11px; }
+
+  /* Top picks panel & parlay panels — tighten */
+  .top-picks { padding: 8px; }
+  .tp-parlay { padding: 8px; gap: 6px; font-size: 12px; }
+  .tp-parlay-verdict { padding: 8px; }
+  .tpv-headline { font-size: 13px; }
+  .tpv-grade { font-size: 13px; }
+  .tpv-compare { font-size: 10px; line-height: 1.35; }
+}
+
+/* "Show all edges" toggle — surfaces edges hidden by the conf/positive-edge filter. */
+.edge-filter-toggle {
+  display: flex;
+  justify-content: flex-end;
+  padding: 6px 4px 10px;
+}
+.edge-filter-toggle[hidden] { display: none; }
+.eft-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border: 1px solid var(--rule-soft);
+  border-radius: 999px;
+  background: var(--paper);
+  font-family: var(--ff-mono);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--ink-soft);
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.1s, color 0.1s, border-color 0.1s;
+}
+.eft-pill:hover { border-color: var(--ink); color: var(--ink); }
+.eft-pill input[type="checkbox"] { margin: 0; cursor: pointer; }
+.eft-pill.is-on {
+  background: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+/* Muted rows: edges revealed by SHOW_ALL_EDGES that don't pass threshold. */
+.edges-table tr.edge-muted td {
+  opacity: 0.5;
+  font-style: italic;
+}
+.edges-table tr.edge-lowconf td.ed-conf { color: #b45309; opacity: 0.7; font-style: italic; }
+
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-inner">
+    <div class="logo-block">
+      <div class="logo-mark">NYY</div>
+      <div class="logo-text">
+        <h1>The Prop Lab</h1>
+        <p class="subtitle">Yankees Probabilities</p>
+      </div>
+    </div>
+    <div class="masthead-meta">
+      <div class="meta-item">
+        <span class="meta-label">Odds updated</span>
+        <span class="meta-value" id="generated-at">—</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Refresh took</span>
+        <span class="meta-value" id="build-time">—</span>
+      </div>
+      
+    </div>
+  </div>
+</header>
+
+<section class="game-strip" id="game-strip">
+  <div class="game-loading">Loading today's game…</div>
+</section>
+
+<section class="odds-meta-bar" id="odds-meta-bar" hidden></section>
+
+<main class="content">
+  <div class="content-header">
+    <h2>Lines &amp; Edges</h2>
+    <div class="legend">
+      <span class="legend-item">⅛-Kelly</span>
+      <span class="legend-item">de-vigged when both sides priced</span>
+      <span class="legend-item">Conf = P(edge&gt;0 | Monte Carlo)</span>
+      <span class="legend-item">stake assumes $100 bankroll</span>
+    </div>
+  </div>
+
+  <section id="top-picks" class="top-picks" hidden></section>
+
+  <div id="edge-filter-toggle" class="edge-filter-toggle" hidden></div>
+
+  <div id="players-grid" class="players-grid">
+    <div class="loading-pulse">Loading hitter models…</div>
+  </div>
+</main>
+
+<footer class="footer">
+  <p>Data: MLB Stats API (free, public). Park factors: hardcoded annual averages — update before each season. Weather: OpenWeatherMap (optional). Umpire data: user-supplied JSON. Model assumptions documented in <code>model.py</code>.</p>
+</footer>
+
+<!-- Detail modal -->
+<div id="modal-backdrop" class="modal-backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true">
+    <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+// ============================================================================
+// UI flags injected from config.py (Python). Single source of truth.
+// ============================================================================
+const COMPACT_MODE = true;
+const BANKROLL_USD = 100.0;
+const TEAM_NAME = "Yankees";
+
+const fmt = {
+  pct: (v) => v == null ? '—' : (v * 100).toFixed(1) + '%',
+  num: (v, d = 2) => v == null ? '—' : Number(v).toFixed(d),
+  avg: (v) => v == null ? '—' : (typeof v === 'string' ? v : v.toFixed(3)).replace(/^0\./, '.'),
+  int: (v) => v == null ? '—' : v,
+};
+
+function fmtAmerican(price) {
+  if (price == null) return '—';
+  return price > 0 ? '+' + price : String(price);
+}
+
+function americanToDecimal(p) {
+  const o = Number(p);
+  if (!Number.isFinite(o) || o === 0) return null;
+  return o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+}
+function decimalToAmerican(d) {
+  if (d == null || d <= 1) return null;
+  return d >= 2 ? Math.round((d - 1) * 100) : Math.round(-100 / (d - 1));
+}
+function kellyFractionFromDecimal(modelProb, decimal) {
+  if (!Number.isFinite(decimal) || decimal <= 1) return 0;
+  const b = decimal - 1;
+  const q = 1 - modelProb;
+  const full = (b * modelProb - q) / b;
+  const KELLY_MULT = 0.125;
+  return full > 0 ? full * KELLY_MULT : 0;
+}
+// Mirrors core/parlay.py::parlay_summary — multiply per-leg decimal odds and
+// model/fair probs (independence assumption), then size by Kelly.
+function computeParlaySummary(legs, bankroll) {
+  if (!legs || legs.length < 2) return null;
+  let dec = 1, mp = 1, fp = 1;
+  for (const leg of legs) {
+    if (leg.price == null || leg.model_prob == null || leg.fair_prob == null) return null;
+    if (leg.model_prob <= 0 || leg.fair_prob <= 0) return null;
+    const d = americanToDecimal(leg.price);
+    if (d == null) return null;
+    dec *= d; mp *= leg.model_prob; fp *= leg.fair_prob;
+  }
+  const american = decimalToAmerican(dec);
+  const kelly = american != null ? kellyFractionFromDecimal(mp, dec) : 0;
+  return {
+    n_legs: legs.length,
+    decimal_odds: dec,
+    american_odds: american,
+    model_prob: mp,
+    fair_prob: fp,
+    implied_prob: 1 / dec,
+    edge: mp - fp,
+    kelly_frac: kelly,
+    stake: kelly * bankroll,
+  };
+}
+
+// Mirrors core/parlay.py::parlay_at_price for the dashboard book-price override.
+// modelProb is the independence-multiplied joint probability from the server.
+function parlayAtPrice(modelProb, americanPrice, bankroll) {
+  const o = Number(americanPrice);
+  if (!Number.isFinite(o) || o === 0) return null;
+  const decimal = o > 0 ? 1 + o / 100 : 1 + 100 / -o;
+  const implied = 1 / decimal;
+  const edge = modelProb - implied;
+  const b = decimal - 1;
+  const q = 1 - modelProb;
+  const fullKelly = (b * modelProb - q) / b;
+  const KELLY_MULT = 0.125;  // matches config.KELLY_MULT
+  const kelly = fullKelly > 0 ? fullKelly * KELLY_MULT : 0;
+  return {
+    decimal_odds: decimal,
+    implied_prob: implied,
+    edge,
+    kelly_frac: kelly,
+    stake: kelly * bankroll,
+  };
+}
+
+// Mirrors core/parlay.py::singles_summary — sum per-leg Kelly stake and EV.
+function singlesSummary(legs) {
+  if (!legs || !legs.length) return null;
+  let totalStake = 0, totalEv = 0;
+  for (const leg of legs) {
+    const price = leg.price, mp = leg.model_prob, stake = leg.stake || 0;
+    if (price == null || mp == null) return null;
+    const decimal = price > 0 ? 1 + price / 100 : 1 + 100 / -price;
+    totalStake += stake;
+    totalEv += stake * (mp * decimal - 1);
+  }
+  return { total_stake: totalStake, total_ev: totalEv };
+}
+
+// Mirrors core/parlay.py::parlay_vs_singles — singles is the default play,
+// parlay gets graded GOOD / ACCEPTABLE / POOR / DONATION (or BOOSTED if it
+// actually beats singles at the book's price).
+function parlayVsSingles(legs, parlayModelProb, indepDecimal, bookPrice, bankroll) {
+  const singles = singlesSummary(legs);
+  const atBook = parlayAtPrice(parlayModelProb, bookPrice, bankroll);
+  if (!singles || !atBook) return null;
+  const parlayEv = atBook.stake * (parlayModelProb * atBook.decimal_odds - 1);
+  const priceRatio = indepDecimal > 0 ? atBook.decimal_odds / indepDecimal : 0;
+  const singlesEv = singles.total_ev;
+  const funTaxPct = singlesEv > 0 ? ((singlesEv - parlayEv) / singlesEv * 100) : 0;
+  let grade, headline, reason;
+  if (atBook.edge <= 0) {
+    grade = 'DONATION';
+    headline = 'SINGLES_ARE_THE_PLAY';
+    reason = `Parlay is −EV at ${fmtAmerican(Number(bookPrice))} — model joint ${(parlayModelProb*100).toFixed(1)}% vs book implied ${(atBook.implied_prob*100).toFixed(1)}%. Pure donation.`;
+  } else if (singlesEv <= 0 || parlayEv > singlesEv) {
+    grade = 'BOOSTED';
+    headline = 'TAKE_THE_PARLAY';
+    reason = `Parlay EV $${parlayEv.toFixed(2)} exceeds singles EV $${singlesEv.toFixed(2)} — book is paying enough to overcome the parlay tax.`;
+  } else if (funTaxPct < 15) {
+    grade = 'GOOD';
+    headline = 'SINGLES_ARE_THE_PLAY';
+    reason = `Small fun tax — only ${funTaxPct.toFixed(0)}% of singles EV foregone. Barely costs anything to play for the sweat.`;
+  } else if (funTaxPct < 50) {
+    grade = 'ACCEPTABLE';
+    headline = 'SINGLES_ARE_THE_PLAY';
+    reason = `Modest fun tax — ${funTaxPct.toFixed(0)}% of singles EV foregone. Reasonable cost for the sweat.`;
+  } else {
+    grade = 'POOR';
+    headline = 'SINGLES_ARE_THE_PLAY';
+    reason = `Heavy fun tax — ${funTaxPct.toFixed(0)}% of singles EV foregone. Most of your edge goes to the book.`;
+  }
+  return {
+    headline, grade, reason,
+    fun_tax_pct: funTaxPct,
+    singles_stake: singles.total_stake,
+    singles_ev: singlesEv,
+    parlay_stake: atBook.stake,
+    parlay_ev: parlayEv,
+    price_ratio: priceRatio,
+  };
+}
+function fmtEdge(edge) {
+  if (edge == null) return '—';
+  const sign = edge > 0 ? '+' : '';
+  return sign + (edge * 100).toFixed(1) + '%';
+}
+function bookLabel(b) { return b === 'draftkings' ? 'DK' : b === 'fanduel' ? 'FD' : b === 'betmgm' ? 'MGM' : b === 'williamhill_us' ? 'CZR' : (b || '').slice(0,2).toUpperCase(); }
+function marketLabel(m) {
+  return ({
+    batter_hits: 'Hits',
+    batter_total_bases: 'Total Bases',
+    batter_home_runs: 'Home Run',
+    batter_strikeouts: 'Strikeouts',
+    batter_runs_scored: 'Runs Scored',
+    batter_walks: 'Walks',
+    batter_hits_runs_rbis: 'H+R+RBI',
+    batter_doubles: 'Doubles',
+    batter_singles: 'Singles',
+    batter_rbis: 'RBIs',
+    pitcher_strikeouts: 'Pitcher Ks',
+    pitcher_outs: 'Pitcher Outs',
+  })[m] || m;
+}
+function marketShort(m) {
+  return ({
+    batter_hits: 'H',
+    batter_total_bases: 'TB',
+    batter_home_runs: 'HR',
+    batter_strikeouts: 'K',
+    batter_runs_scored: 'R',
+    batter_walks: 'BB',
+    batter_hits_runs_rbis: 'HRR',
+    batter_doubles: '2B',
+    batter_singles: '1B',
+    batter_rbis: 'RBI',
+    pitcher_strikeouts: 'PK',
+    pitcher_outs: 'PO',
+  })[m] || m;
+}
+function legChipLabel(leg) {
+  const last = (leg.name || (leg.full_name || '').split(' ').slice(-1)[0] || '?');
+  const mkt = marketShort(leg.market);
+  const line = leg.line == null ? '' : leg.line;
+  const side = (leg.side || '?')[0];
+  return `${last} ${mkt}${line}${side}`;
+}
+function legId(leg) {
+  return `${leg.player_id ?? leg.full_name ?? leg.name}|${leg.market}|${leg.side}|${leg.line}`;
+}
+function edgeClass(edge) {
+  if (edge == null) return '';
+  if (edge >= 0.05) return 'edge-strong';
+  if (edge >= 0.02) return 'edge-mid';
+  if (edge > 0)     return 'edge-weak';
+  return 'edge-neg';
+}
+
+function probClass(p) {
+  if (p == null) return '';
+  if (p >= 0.70) return 'p-strong';
+  if (p >= 0.50) return 'p-mid';
+  return 'p-weak';
+}
+
+
+const STATIC_DATA = {"build_seconds": 3.13, "game": null, "generated_at_unix": 1778775443, "league": "MLB", "odds_meta": {"configured": true, "credits_remaining": null, "credits_used": null, "error": "No upcoming Yankees event found", "event_id": null, "fetched": false}, "parlay_top2": {"legs": [], "summary": null}, "parlay_top3": {"legs": [], "summary": null}, "pitchers": [], "players": [{"diagnostics": {"ab_per_pa": 0.825, "bb": {"batter_bb_rate": 0.11666666666666667, "bp_bb_rate": null, "combined_bb_per_pa": 0.11666666666666667, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0466, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.06143344709897611, "recent_2b": 0.046511627906976744, "season_2b": 0.05421686746987952, "venue_2b": 0.044, "xslg_lift": -0.0053}, "hit": {"blended_avg": 0.2847971135830431, "platoon_avg": 0.2627986348122867, "recent_avg": 0.2558139534883721, "recent_pa": 65.0, "season_avg": 0.2680722891566265, "statcast_ba_diff": 0.008000000000000007, "statcast_lift": 0.0, "venue_avg": 0.26, "venue_key": "home", "venue_pa": 65.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 20.7, "base_rate": 0.049861111111111106, "bp_hr_per_9": null, "contact_mult": 1.301, "effective_hr_per_9": 1.2, "final": 0.06488996799999999, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": 0.07400000000000007, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.236561797752809, "blended_batter_k": 0.23213832944668222, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.23213832944668222, "pitcher_k_rate": 0.225, "recent_k_rate": 0.2188679245283019, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.046560514403036386, "per_ab_outcomes": {"1B": 0.14921489607300292, "2B": 0.05421686746987952, "3B": 0.0027108433734939754, "HR": 0.07865450666666667, "out": 0.7152028864169568}, "rbis": {"final": 0.6715017098192477, "lineup_spot": null, "platoon_rbi_per_g": 0.8226086956521739, "pq_mult": 1.0, "season_rbi_per_g": 0.6067415730337079, "spot_mult": 1.0}, "runs": {"final": 0.6292134831460674, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.6292134831460674, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 700250, "last_15": {"atBats": 58, "avg": 0.293, "baseOnBalls": 6, "doubles": 3, "games": 15, "hits": 17, "homeRuns": 5, "hrRate": 0.0769, "kRate": 0.2, "obp": 0.354, "plateAppearances": 65, "rbi": 11, "slg": 0.603, "strikeOuts": 13, "totalBases": 35, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.5658502133018033, "p_at_least_one_hr": 0.13500433811194057, "p_over_0_5_bb": 0.26406392414774205, "p_over_0_5_doubles": 0.06793458544348774, "p_over_0_5_hits": 0.5658502133018033, "p_over_0_5_hrr": 0.786775505517854, "p_over_0_5_k": 0.5659049542091854, "p_over_0_5_rbis": 0.4029082517892715, "p_over_0_5_runs": 0.3723851730870684, "p_over_0_5_tb": 0.5658502133018032, "p_over_1_5_bb": 0.029543553044740767, "p_over_1_5_doubles": 0.002361658916930409, "p_over_1_5_hits": 0.14955752862156568, "p_over_1_5_hrr": 0.45725630270022966, "p_over_1_5_k": 0.16948267312185927, "p_over_1_5_rbis": 0.09499729496399678, "p_over_1_5_runs": 0.08002421582611219, "p_over_1_5_tb": 0.3494443327729862, "p_over_2_5_hits": 0.014527283723142936, "p_over_2_5_hrr": 0.20263521592200595, "p_over_2_5_k": 0.024460094931655463, "p_over_2_5_rbis": 0.015604841779736978, "p_over_2_5_tb": 0.21083082127770725, "p_over_3_5_hrr": 0.07147058317270605, "p_over_3_5_tb": 0.15667153853338553}, "p50": {"p_at_least_one_hit": 0.696612809144505, "p_at_least_one_hr": 0.24692243181106177, "p_over_0_5_bb": 0.4104551738654165, "p_over_0_5_doubles": 0.1590512603232771, "p_over_0_5_hits": 0.696612809144505, "p_over_0_5_hrr": 0.8450668030973763, "p_over_0_5_k": 0.6740575618960013, "p_over_0_5_rbis": 0.4910055106161091, "p_over_0_5_runs": 0.46639338678671727, "p_over_0_5_tb": 0.6966128091445049, "p_over_1_5_bb": 0.07801531216261737, "p_over_1_5_doubles": 0.013378274398594181, "p_over_1_5_hits": 0.2680077816624036, "p_over_1_5_hrr": 0.5561533823073358, "p_over_1_5_k": 0.25553717109096885, "p_over_1_5_rbis": 0.14727232481121733, "p_over_1_5_runs": 0.13123699887807083, "p_over_1_5_tb": 0.4699115242325667, "p_over_2_5_hits": 0.05071671956466395, "p_over_2_5_hrr": 0.28677610751623694, "p_over_2_5_k": 0.04932017750974871, "p_over_2_5_rbis": 0.031207705755520676, "p_over_2_5_tb": 0.3315520707720137, "p_over_3_5_hrr": 0.11933467361895633, "p_over_3_5_tb": 0.27803511637878586}, "p95": {"p_at_least_one_hit": 0.8077473122016393, "p_at_least_one_hr": 0.3604346268869649, "p_over_0_5_bb": 0.5655308928597704, "p_over_0_5_doubles": 0.25514605377979505, "p_over_0_5_hits": 0.8077473122016393, "p_over_0_5_hrr": 0.8931493531102555, "p_over_0_5_k": 0.780929698571118, "p_over_0_5_rbis": 0.5574081532912163, "p_over_0_5_runs": 0.5431145836864514, "p_over_0_5_tb": 0.8077473122016395, "p_over_1_5_bb": 0.1714009124986977, "p_over_1_5_doubles": 0.03573656817466031, "p_over_1_5_hits": 0.4154049020577729, "p_over_1_5_hrr": 0.654196767935836, "p_over_1_5_k": 0.39123531492341246, "p_over_1_5_rbis": 0.1966483201176381, "p_over_1_5_runs": 0.18522588877350266, "p_over_1_5_tb": 0.588968353626961, "p_over_2_5_hits": 0.11515051700800538, "p_over_2_5_hrr": 0.3870091578296663, "p_over_2_5_k": 0.11565880970488807, "p_over_2_5_rbis": 0.049619338224685894, "p_over_2_5_tb": 0.45473774335367206, "p_over_3_5_hrr": 0.1878365369179006, "p_over_3_5_tb": 0.3981909908148749}}, "model": {"expected_ab": 3.55, "expected_hits": 1.01, "expected_hrs": 0.279, "expected_pa": 4.3, "expected_rbis": 0.672, "expected_runs": 0.629, "expected_strikeouts": 0.998, "expected_total_bases": 2.059, "p_at_least_one_hit": 0.695, "p_at_least_one_hr": 0.251, "p_hit_per_ab": 0.285, "p_hr_per_pa": 0.0649, "p_k_per_pa": 0.232, "p_over_0_5_hits": 0.738, "p_over_0_5_k": 0.652, "p_over_0_5_rbis": 0.489, "p_over_0_5_runs": 0.467, "p_over_0_5_tb": 0.738, "p_over_1_5_hits": 0.322, "p_over_1_5_k": 0.232, "p_over_1_5_rbis": 0.146, "p_over_1_5_runs": 0.132, "p_over_1_5_tb": 0.52, "p_over_2_5_hits": 0.073, "p_over_2_5_k": 0.041, "p_over_2_5_rbis": 0.031, "p_over_2_5_tb": 0.372, "p_over_3_5_tb": 0.309}, "name": "Ben Rice", "odds": {}, "platoon_split": {"airOuts": 17, "atBats": 93, "atBatsPerHomeRun": "11.62", "avg": ".301", "babip": ".333", "baseOnBalls": 20, "catchersInterference": 0, "doubles": 9, "gamesPlayed": 38, "groundIntoDoublePlay": 4, "groundIntoTriplePlay": 0, "groundOuts": 23, "groundOutsToAirouts": "1.35", "hitByPitch": 0, "hits": 28, "homeRuns": 8, "intentionalWalks": 2, "leftOnBase": 35, "numberOfPitches": 487, "obp": ".417", "ops": "1.073", "plateAppearances": 115, "rbi": 22, "sacBunts": 0, "sacFlies": 2, "slg": ".656", "strikeOuts": 27, "totalBases": 61, "triples": 0}, "position": "1B", "season": {"AB": 132, "AVG": ".303", "BB%": 15.6, "H": 40, "HR": 13, "K%": 25.6, "OBP": ".413", "OPS": "1.080", "PA": 160, "SLG": ".667"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8092783505154639, "bb": {"batter_bb_rate": 0.12944162436548223, "bp_bb_rate": null, "combined_bb_per_pa": 0.12944162436548223, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.049, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.050793650793650794, "recent_2b": 0.04330708661417323, "season_2b": 0.04481792717086835, "venue_2b": 0.04744525547445255, "xslg_lift": 0.0033}, "hit": {"blended_avg": 0.26766292435115524, "platoon_avg": 0.2571428571428571, "recent_avg": 0.2559055118110236, "recent_pa": 67.0, "season_avg": 0.2549019607843137, "statcast_ba_diff": -0.0030000000000000027, "statcast_lift": 0.0, "venue_avg": 0.26277372262773724, "venue_key": "home", "venue_pa": 90.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 25.3, "base_rate": 0.05405561027350557, "bp_hr_per_9": null, "contact_mult": 1.29, "effective_hr_per_9": 1.2, "final": 0.06971011500871278, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": -0.020000000000000018, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.29178461538461536, "blended_batter_k": 0.2806362143474503, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.2806362143474503, "pitcher_k_rate": 0.225, "recent_k_rate": 0.24719101123595505, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.0489855792792483, "per_ab_outcomes": {"1B": 0.134185375326669, "2B": 0.04481792717086835, "3B": 0.0025210084033613443, "HR": 0.08613861345025656, "out": 0.7323370756488448}, "rbis": {"final": 0.6197966903073286, "lineup_spot": null, "platoon_rbi_per_g": 0.7007407407407408, "pq_mult": 1.0, "season_rbi_per_g": 0.5851063829787234, "spot_mult": 1.0}, "runs": {"final": 0.648936170212766, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.648936170212766, "spot_mult": 1.0}}, "edges": [], "handedness": "R", "id": 592450, "last_15": {"atBats": 54, "avg": 0.296, "baseOnBalls": 13, "doubles": 2, "games": 15, "hits": 16, "homeRuns": 5, "hrRate": 0.0746, "kRate": 0.3134, "obp": 0.433, "plateAppearances": 67, "rbi": 11, "slg": 0.611, "strikeOuts": 21, "totalBases": 33, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.5195965034726003, "p_at_least_one_hr": 0.14974650417949686, "p_over_0_5_bb": 0.3179714851505635, "p_over_0_5_doubles": 0.0691160700128004, "p_over_0_5_hits": 0.5195965034726003, "p_over_0_5_hrr": 0.7672516298899799, "p_over_0_5_k": 0.638482658998879, "p_over_0_5_rbis": 0.36489182286071065, "p_over_0_5_runs": 0.39733476955271296, "p_over_0_5_tb": 0.5195965034726004, "p_over_1_5_bb": 0.04407723088404003, "p_over_1_5_doubles": 0.002445528190077595, "p_over_1_5_hits": 0.12063382234101128, "p_over_1_5_hrr": 0.4279516690961024, "p_over_1_5_k": 0.21964647110385926, "p_over_1_5_rbis": 0.07657815484251851, "p_over_1_5_runs": 0.09214906853358085, "p_over_1_5_tb": 0.3419658430094657, "p_over_2_5_hits": 0.010191092367647592, "p_over_2_5_hrr": 0.18063637459950188, "p_over_2_5_k": 0.03768035316677221, "p_over_2_5_rbis": 0.011136727572189309, "p_over_2_5_tb": 0.22436982114983792, "p_over_3_5_hrr": 0.06045784633632989, "p_over_3_5_tb": 0.18251715936933244}, "p50": {"p_at_least_one_hit": 0.6544543587801236, "p_at_least_one_hr": 0.26136578926423204, "p_over_0_5_bb": 0.44548186538997747, "p_over_0_5_doubles": 0.15557351870755098, "p_over_0_5_hits": 0.6544543587801236, "p_over_0_5_hrr": 0.8239560283172567, "p_over_0_5_k": 0.7431665898344215, "p_over_0_5_rbis": 0.463032130741833, "p_over_0_5_runs": 0.48143392006568975, "p_over_0_5_tb": 0.6544543587801236, "p_over_1_5_bb": 0.09405984460303385, "p_over_1_5_doubles": 0.01278302529777442, "p_over_1_5_hits": 0.22141760601904836, "p_over_1_5_hrr": 0.5181638687765876, "p_over_1_5_k": 0.3292954884433432, "p_over_1_5_rbis": 0.12913637041870096, "p_over_1_5_runs": 0.14089789409636022, "p_over_1_5_tb": 0.43430534101849033, "p_over_2_5_hits": 0.030748639550550405, "p_over_2_5_hrr": 0.2525800946128731, "p_over_2_5_k": 0.07655067049328812, "p_over_2_5_rbis": 0.025325337073462517, "p_over_2_5_tb": 0.3127171089490754, "p_over_3_5_hrr": 0.09880518814264572, "p_over_3_5_tb": 0.2770367049551218}, "p95": {"p_at_least_one_hit": 0.7644657655998875, "p_at_least_one_hr": 0.36692810718335644, "p_over_0_5_bb": 0.5535153526160776, "p_over_0_5_doubles": 0.24592516678922638, "p_over_0_5_hits": 0.7644657655998875, "p_over_0_5_hrr": 0.8755661012336782, "p_over_0_5_k": 0.8512881505062468, "p_over_0_5_rbis": 0.5397840987495695, "p_over_0_5_runs": 0.5580796635761458, "p_over_0_5_tb": 0.7644657655998879, "p_over_1_5_bb": 0.1595178906892727, "p_over_1_5_doubles": 0.03307723871564727, "p_over_1_5_hits": 0.3542171549341503, "p_over_1_5_hrr": 0.6162482655340821, "p_over_1_5_k": 0.5048158066256265, "p_over_1_5_rbis": 0.1826291539525733, "p_over_1_5_runs": 0.1971961827077704, "p_over_1_5_tb": 0.5552445624508021, "p_over_2_5_hits": 0.08625623146931183, "p_over_2_5_hrr": 0.3460415912330318, "p_over_2_5_k": 0.18514625164798826, "p_over_2_5_rbis": 0.04404240124981007, "p_over_2_5_tb": 0.42980174930119036, "p_over_3_5_hrr": 0.15833976542826045, "p_over_3_5_tb": 0.39285521060317247}}, "model": {"expected_ab": 3.48, "expected_hits": 0.931, "expected_hrs": 0.3, "expected_pa": 4.3, "expected_rbis": 0.62, "expected_runs": 0.649, "expected_strikeouts": 1.207, "expected_total_bases": 2.004, "p_at_least_one_hit": 0.662, "p_at_least_one_hr": 0.267, "p_hit_per_ab": 0.268, "p_hr_per_pa": 0.0697, "p_k_per_pa": 0.281, "p_over_0_5_hits": 0.607, "p_over_0_5_k": 0.732, "p_over_0_5_rbis": 0.462, "p_over_0_5_runs": 0.477, "p_over_0_5_tb": 0.607, "p_over_1_5_hits": 0.177, "p_over_1_5_k": 0.314, "p_over_1_5_rbis": 0.128, "p_over_1_5_runs": 0.138, "p_over_1_5_tb": 0.391, "p_over_2_5_hits": 0.019, "p_over_2_5_k": 0.07, "p_over_2_5_rbis": 0.025, "p_over_2_5_tb": 0.28, "p_over_3_5_tb": 0.247}, "name": "Aaron Judge", "odds": {}, "platoon_split": {"airOuts": 22, "atBats": 115, "atBatsPerHomeRun": "10.46", "avg": ".278", "babip": ".333", "baseOnBalls": 17, "catchersInterference": 1, "doubles": 7, "gamesPlayed": 43, "groundIntoDoublePlay": 4, "groundIntoTriplePlay": 0, "groundOuts": 20, "groundOutsToAirouts": "0.91", "hitByPitch": 2, "hits": 32, "homeRuns": 11, "intentionalWalks": 2, "leftOnBase": 42, "numberOfPitches": 577, "obp": ".381", "ops": "1.007", "plateAppearances": 135, "rbi": 22, "sacBunts": 0, "sacFlies": 0, "slg": ".626", "strikeOuts": 41, "totalBases": 72, "triples": 0}, "position": "RF", "season": {"AB": 157, "AVG": ".268", "BB%": 17.5, "H": 42, "HR": 16, "K%": 28.4, "OBP": ".404", "OPS": "1.022", "PA": 194, "SLG": ".618"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8714285714285714, "bb": {"batter_bb_rate": 0.09259259259259259, "bp_bb_rate": null, "combined_bb_per_pa": 0.09259259259259259, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0513, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.048458149779735685, "recent_2b": 0.04417670682730924, "season_2b": 0.04980842911877394, "venue_2b": null, "xslg_lift": 0.0031}, "hit": {"blended_avg": 0.28615174380163755, "platoon_avg": 0.2511013215859031, "recent_avg": 0.24899598393574296, "recent_pa": 54.0, "season_avg": 0.24904214559386972, "statcast_ba_diff": null, "statcast_lift": 0.0, "venue_avg": null, "venue_key": "home", "venue_pa": 37.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.55, "venue": 0}}, "hr": {"barrel_pct": null, "base_rate": 0.03477276403040595, "bp_hr_per_9": null, "contact_mult": 1.0, "effective_hr_per_9": 1.2, "final": 0.03477276403040595, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": null, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.18154074074074075, "blended_batter_k": 0.19127366579177602, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.19127366579177602, "pitcher_k_rate": 0.225, "recent_k_rate": 0.2204724409448819, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.051314022218822516, "per_ab_outcomes": {"1B": 0.18916044935810278, "2B": 0.04980842911877394, "3B": 0.007279693486590038, "HR": 0.03990317183817076, "out": 0.7138482561983625}, "rbis": {"final": 0.6168965517241378, "lineup_spot": null, "platoon_rbi_per_g": 0.8896551724137931, "pq_mult": 1.0, "season_rbi_per_g": 0.5, "spot_mult": 1.0}, "runs": {"final": 0.5571428571428572, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.5571428571428572, "spot_mult": 1.0}}, "edges": [], "handedness": "R", "id": 502671, "last_15": {"atBats": 49, "avg": 0.265, "baseOnBalls": 5, "doubles": 2, "games": 15, "hits": 13, "homeRuns": 3, "hrRate": 0.0556, "kRate": 0.2037, "obp": 0.333, "plateAppearances": 54, "rbi": 7, "slg": 0.531, "strikeOuts": 11, "totalBases": 26, "triples": 1}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.5217834681874587, "p_at_least_one_hr": 0.004990009995000988, "p_over_0_5_bb": 0.13484969991267937, "p_over_0_5_doubles": 0.015185356792999705, "p_over_0_5_hits": 0.5217834681874587, "p_over_0_5_hrr": 0.7577941111162149, "p_over_0_5_k": 0.4005481359931494, "p_over_0_5_rbis": 0.35976369572828726, "p_over_0_5_runs": 0.34050313964763335, "p_over_0_5_tb": 0.5217834681874589, "p_over_1_5_bb": 0.007234198037315842, "p_over_1_5_doubles": 0.0001158856138046005, "p_over_1_5_hits": 0.13206181598628963, "p_over_1_5_hrr": 0.4143541210122924, "p_over_1_5_k": 0.07329773413530527, "p_over_1_5_rbis": 0.0742708383884545, "p_over_1_5_runs": 0.06596906110804168, "p_over_1_5_tb": 0.3040622468822093, "p_over_2_5_hits": 0.013574426703750309, "p_over_2_5_hrr": 0.1708608117740983, "p_over_2_5_k": 0.006303514949615563, "p_over_2_5_rbis": 0.010617644209800603, "p_over_2_5_tb": 0.15060242161902943, "p_over_3_5_hrr": 0.05577230848938297, "p_over_3_5_tb": 0.06771382728607439}, "p50": {"p_at_least_one_hit": 0.7190077585398831, "p_at_least_one_hr": 0.14908656363787332, "p_over_0_5_bb": 0.3340276771037167, "p_over_0_5_doubles": 0.17706549109690317, "p_over_0_5_hits": 0.7190077585398831, "p_over_0_5_hrr": 0.8394787360620248, "p_over_0_5_k": 0.5891789502433256, "p_over_0_5_rbis": 0.4618217980817625, "p_over_0_5_runs": 0.4250633840363174, "p_over_0_5_tb": 0.7190077585398831, "p_over_1_5_bb": 0.04907073616151081, "p_over_1_5_doubles": 0.016693118766074377, "p_over_1_5_hits": 0.29350647065398805, "p_over_1_5_hrr": 0.5458325553619983, "p_over_1_5_k": 0.18246120377951613, "p_over_1_5_rbis": 0.12838512799992952, "p_over_1_5_runs": 0.10683856732742036, "p_over_1_5_tb": 0.44401413577406545, "p_over_2_5_hits": 0.06044482799510775, "p_over_2_5_hrr": 0.2772448389301405, "p_over_2_5_k": 0.028793850709501245, "p_over_2_5_rbis": 0.025092192166612293, "p_over_2_5_tb": 0.2773076471854091, "p_over_3_5_hrr": 0.11346641859651263, "p_over_3_5_tb": 0.19581227896859313}, "p95": {"p_at_least_one_hit": 0.8487799314172217, "p_at_least_one_hr": 0.2811698961400213, "p_over_0_5_bb": 0.5018712734122341, "p_over_0_5_doubles": 0.3139539803332435, "p_over_0_5_hits": 0.8487799314172217, "p_over_0_5_hrr": 0.8997990079752072, "p_over_0_5_k": 0.761403301700881, "p_over_0_5_rbis": 0.5322600907854045, "p_over_0_5_runs": 0.5088860780389886, "p_over_0_5_tb": 0.8487799314172213, "p_over_1_5_bb": 0.12265107275916454, "p_over_1_5_doubles": 0.055444588997850985, "p_over_1_5_hits": 0.4836706359927716, "p_over_1_5_hrr": 0.6692788913142755, "p_over_1_5_k": 0.35722870560066977, "p_over_1_5_rbis": 0.17685124775965066, "p_over_1_5_runs": 0.1596652040207287, "p_over_1_5_tb": 0.599581965475534, "p_over_2_5_hits": 0.15602851663500727, "p_over_2_5_hrr": 0.40411423020881876, "p_over_2_5_k": 0.09387917936744783, "p_over_2_5_rbis": 0.041823807068298136, "p_over_2_5_tb": 0.41293654434651433, "p_over_3_5_hrr": 0.20077030657027872, "p_over_3_5_tb": 0.3247443126757063}}, "model": {"expected_ab": 3.75, "expected_hits": 1.072, "expected_hrs": 0.15, "expected_pa": 4.3, "expected_rbis": 0.617, "expected_runs": 0.557, "expected_strikeouts": 0.822, "expected_total_bases": 1.762, "p_at_least_one_hit": 0.717, "p_at_least_one_hr": 0.141, "p_hit_per_ab": 0.286, "p_hr_per_pa": 0.0348, "p_k_per_pa": 0.191, "p_over_0_5_hits": 0.74, "p_over_0_5_k": 0.572, "p_over_0_5_rbis": 0.46, "p_over_0_5_runs": 0.427, "p_over_0_5_tb": 0.74, "p_over_1_5_hits": 0.324, "p_over_1_5_k": 0.168, "p_over_1_5_rbis": 0.127, "p_over_1_5_runs": 0.108, "p_over_1_5_tb": 0.465, "p_over_2_5_hits": 0.074, "p_over_2_5_k": 0.024, "p_over_2_5_rbis": 0.025, "p_over_2_5_tb": 0.283, "p_over_3_5_tb": 0.196}, "name": "Paul Goldschmidt", "odds": {}, "platoon_split": {"airOuts": 7, "atBats": 27, "atBatsPerHomeRun": "27.00", "avg": ".296", "babip": ".350", "baseOnBalls": 2, "catchersInterference": 0, "doubles": 2, "gamesPlayed": 12, "groundIntoDoublePlay": 0, "groundIntoTriplePlay": 0, "groundOuts": 6, "groundOutsToAirouts": "0.86", "hitByPitch": 0, "hits": 8, "homeRuns": 1, "intentionalWalks": 0, "leftOnBase": 7, "numberOfPitches": 101, "obp": ".345", "ops": ".826", "plateAppearances": 29, "rbi": 6, "sacBunts": 0, "sacFlies": 0, "slg": ".481", "strikeOuts": 6, "totalBases": 13, "triples": 0}, "position": "1B", "season": {"AB": 61, "AVG": ".262", "BB%": 11.4, "H": 16, "HR": 4, "K%": 21.4, "OBP": ".357", "OPS": ".914", "PA": 70, "SLG": ".557"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8324324324324325, "bb": {"batter_bb_rate": 0.11688311688311688, "bp_bb_rate": null, "combined_bb_per_pa": 0.11688311688311688, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.057, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.04590163934426229, "recent_2b": 0.06299212598425197, "season_2b": 0.05367231638418079, "venue_2b": 0.06691449814126393, "xslg_lift": 0.0002}, "hit": {"blended_avg": 0.2791987679195243, "platoon_avg": 0.25573770491803277, "recent_avg": 0.2637795275590551, "recent_pa": 65.0, "season_avg": 0.2570621468926554, "statcast_ba_diff": -0.014999999999999958, "statcast_lift": 0.0, "venue_avg": 0.2788104089219331, "venue_key": "home", "venue_pa": 86.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 8.5, "base_rate": 0.028263736263736267, "bp_hr_per_9": null, "contact_mult": 1.024, "effective_hr_per_9": 1.2, "final": 0.028955858637362643, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": 0.01100000000000001, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.14695800524934383, "blended_batter_k": 0.15927510771059278, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.15927510771059278, "pitcher_k_rate": 0.225, "recent_k_rate": 0.19622641509433963, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.05700065682943562, "per_ab_outcomes": {"1B": 0.1797248670067486, "2B": 0.05367231638418079, "3B": 0.011016949152542373, "HR": 0.034784635376052524, "out": 0.7208012320804758}, "rbis": {"final": 0.5818916129032258, "lineup_spot": null, "platoon_rbi_per_g": 0.5848, "pq_mult": 1.0, "season_rbi_per_g": 0.5806451612903226, "spot_mult": 1.0}, "runs": {"final": 0.5483870967741935, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.5483870967741935, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 641355, "last_15": {"atBats": 54, "avg": 0.333, "baseOnBalls": 10, "doubles": 7, "games": 15, "hits": 18, "homeRuns": 2, "hrRate": 0.0308, "kRate": 0.1077, "obp": 0.431, "plateAppearances": 65, "rbi": 15, "slg": 0.648, "strikeOuts": 7, "totalBases": 35, "triples": 2}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.556296652904975, "p_at_least_one_hr": 0.04043622581592321, "p_over_0_5_bb": 0.26229572660607436, "p_over_0_5_doubles": 0.08596362555470916, "p_over_0_5_hits": 0.556296652904975, "p_over_0_5_hrr": 0.759317699617226, "p_over_0_5_k": 0.3831469924840557, "p_over_0_5_rbis": 0.35459901390071835, "p_over_0_5_runs": 0.337346428050016, "p_over_0_5_tb": 0.5562966529049751, "p_over_1_5_bb": 0.029122668430162646, "p_over_1_5_doubles": 0.003805547081852656, "p_over_1_5_hits": 0.14289450869296272, "p_over_1_5_hrr": 0.4165193215549823, "p_over_1_5_k": 0.06638577442538152, "p_over_1_5_rbis": 0.0719885896129665, "p_over_1_5_runs": 0.06466253415096501, "p_over_1_5_tb": 0.29245848068373054, "p_over_2_5_hits": 0.01346956985312997, "p_over_2_5_hrr": 0.17239931809976494, "p_over_2_5_k": 0.005640075147935519, "p_over_2_5_rbis": 0.010113372781629826, "p_over_2_5_tb": 0.13752213085441833, "p_over_3_5_hrr": 0.05650111106652467, "p_over_3_5_tb": 0.07246697006483536}, "p50": {"p_at_least_one_hit": 0.6862963479311966, "p_at_least_one_hr": 0.11863269553126765, "p_over_0_5_bb": 0.414459347134036, "p_over_0_5_doubles": 0.18007174062817866, "p_over_0_5_hits": 0.6862963479311966, "p_over_0_5_hrr": 0.8218088662968421, "p_over_0_5_k": 0.520510168581156, "p_over_0_5_rbis": 0.44310762334299514, "p_over_0_5_runs": 0.4249270589889329, "p_over_0_5_tb": 0.6862963479311964, "p_over_1_5_bb": 0.07913243144499826, "p_over_1_5_doubles": 0.017284470379793304, "p_over_1_5_hits": 0.2567941287939437, "p_over_1_5_hrr": 0.5144472435066476, "p_over_1_5_k": 0.13411703859348456, "p_over_1_5_rbis": 0.11711213875287929, "p_over_1_5_runs": 0.10676312819119638, "p_over_1_5_tb": 0.416322275224271, "p_over_2_5_hits": 0.046753496098390634, "p_over_2_5_hrr": 0.24936343938876715, "p_over_2_5_k": 0.01671109110776403, "p_over_2_5_rbis": 0.021695986164208647, "p_over_2_5_tb": 0.24406925818798292, "p_over_3_5_hrr": 0.09694921892817132, "p_over_3_5_tb": 0.16127815119819966}, "p95": {"p_at_least_one_hit": 0.7927822225423633, "p_at_least_one_hr": 0.19709137742591176, "p_over_0_5_bb": 0.5406611618521323, "p_over_0_5_doubles": 0.2821488746989892, "p_over_0_5_hits": 0.7927822225423633, "p_over_0_5_hrr": 0.8771615149048496, "p_over_0_5_k": 0.6417120509940127, "p_over_0_5_rbis": 0.5205731682880104, "p_over_0_5_runs": 0.49781226243180976, "p_over_0_5_tb": 0.7927822225423633, "p_over_1_5_bb": 0.15028420344363558, "p_over_1_5_doubles": 0.04418619576317806, "p_over_1_5_hits": 0.3931389369241407, "p_over_1_5_hrr": 0.6195833484257619, "p_over_1_5_k": 0.2314702444430321, "p_over_1_5_rbis": 0.16811582616362775, "p_over_1_5_runs": 0.1519147648231035, "p_over_1_5_tb": 0.5292668915773592, "p_over_2_5_hits": 0.10410469412302514, "p_over_2_5_hrr": 0.3495274624575462, "p_over_2_5_k": 0.04671543706205994, "p_over_2_5_rbis": 0.03855885333652953, "p_over_2_5_tb": 0.3446992264999638, "p_over_3_5_hrr": 0.16076875788517708, "p_over_3_5_tb": 0.26199580981661935}}, "model": {"expected_ab": 3.58, "expected_hits": 0.999, "expected_hrs": 0.125, "expected_pa": 4.3, "expected_rbis": 0.582, "expected_runs": 0.548, "expected_strikeouts": 0.685, "expected_total_bases": 1.644, "p_at_least_one_hit": 0.69, "p_at_least_one_hr": 0.119, "p_hit_per_ab": 0.279, "p_hr_per_pa": 0.029, "p_k_per_pa": 0.159, "p_over_0_5_hits": 0.73, "p_over_0_5_k": 0.5, "p_over_0_5_rbis": 0.441, "p_over_0_5_runs": 0.422, "p_over_0_5_tb": 0.73, "p_over_1_5_hits": 0.312, "p_over_1_5_k": 0.122, "p_over_1_5_rbis": 0.116, "p_over_1_5_runs": 0.105, "p_over_1_5_tb": 0.461, "p_over_2_5_hits": 0.069, "p_over_2_5_k": 0.014, "p_over_2_5_rbis": 0.021, "p_over_2_5_tb": 0.28, "p_over_3_5_tb": 0.186}, "name": "Cody Bellinger", "odds": {}, "platoon_split": {"airOuts": 34, "atBats": 105, "atBatsPerHomeRun": "35.00", "avg": ".276", "babip": ".306", "baseOnBalls": 19, "catchersInterference": 0, "doubles": 5, "gamesPlayed": 41, "groundIntoDoublePlay": 1, "groundIntoTriplePlay": 0, "groundOuts": 25, "groundOutsToAirouts": "0.74", "hitByPitch": 0, "hits": 29, "homeRuns": 3, "intentionalWalks": 0, "leftOnBase": 40, "numberOfPitches": 472, "obp": ".384", "ops": ".832", "plateAppearances": 125, "rbi": 17, "sacBunts": 0, "sacFlies": 1, "slg": ".448", "strikeOuts": 18, "totalBases": 47, "triples": 2}, "position": "LF", "season": {"AB": 154, "AVG": ".273", "BB%": 15.1, "H": 42, "HR": 5, "K%": 12.4, "OBP": ".378", "OPS": ".852", "PA": 185, "SLG": ".474"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8987341772151899, "bb": {"batter_bb_rate": 0.08243727598566308, "bp_bb_rate": null, "combined_bb_per_pa": 0.08243727598566308, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0424, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.042735042735042736, "recent_2b": 0.04081632653061224, "season_2b": 0.04059040590405904, "venue_2b": null, "xslg_lift": 0.0014}, "hit": {"blended_avg": 0.25133719857874015, "platoon_avg": 0.25213675213675213, "recent_avg": 0.24489795918367346, "recent_pa": 50.0, "season_avg": 0.25092250922509224, "statcast_ba_diff": null, "statcast_lift": 0.0, "venue_avg": null, "venue_key": "home", "venue_pa": 42.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.55, "venue": 0}}, "hr": {"barrel_pct": null, "base_rate": 0.035111837030987705, "bp_hr_per_9": null, "contact_mult": 1.0, "effective_hr_per_9": 1.2, "final": 0.035111837030987705, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": null, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.21093189964157708, "blended_batter_k": 0.2121989247311828, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.2121989247311828, "pitcher_k_rate": 0.225, "recent_k_rate": 0.216, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.0424123844022463, "per_ab_outcomes": {"1B": 0.16466762220555708, "2B": 0.04059040590405904, "3B": 0.007011070110701107, "HR": 0.03906810035842294, "out": 0.7486628014212598}, "rbis": {"final": 0.6173873873873874, "lineup_spot": null, "platoon_rbi_per_g": 0.8135135135135135, "pq_mult": 1.0, "season_rbi_per_g": 0.5333333333333333, "spot_mult": 1.0}, "runs": {"final": 0.4666666666666667, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.4666666666666667, "spot_mult": 1.0}}, "edges": [], "handedness": "R", "id": 642708, "last_15": {"atBats": 45, "avg": 0.244, "baseOnBalls": 4, "doubles": 1, "games": 15, "hits": 11, "homeRuns": 2, "hrRate": 0.04, "kRate": 0.18, "obp": 0.3, "plateAppearances": 50, "rbi": 9, "slg": 0.4, "strikeOuts": 9, "totalBases": 18, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.49638418978514187, "p_at_least_one_hr": 0.009192199293344583, "p_over_0_5_bb": 0.11344745805235779, "p_over_0_5_doubles": 0.0012242551317801498, "p_over_0_5_hits": 0.49638418978514187, "p_over_0_5_hrr": 0.7308863729134943, "p_over_0_5_k": 0.4622085603813234, "p_over_0_5_rbis": 0.37505945671487995, "p_over_0_5_runs": 0.30102964761737827, "p_over_0_5_tb": 0.4963841897851419, "p_over_1_5_bb": 0.00507024023685354, "p_over_1_5_doubles": 7.497063202466236e-07, "p_over_1_5_hits": 0.1123697370295269, "p_over_1_5_hrr": 0.3776420177089356, "p_over_1_5_k": 0.10136986506761303, "p_over_1_5_rbis": 0.08127567942136227, "p_over_1_5_runs": 0.05069554638795726, "p_over_1_5_tb": 0.2582417303209136, "p_over_2_5_hits": 0.011762000241530401, "p_over_2_5_hrr": 0.14580393534424374, "p_over_2_5_k": 0.010578699726624063, "p_over_2_5_rbis": 0.012221984051281276, "p_over_2_5_tb": 0.1138606553580243, "p_over_3_5_hrr": 0.0443653784498953, "p_over_3_5_tb": 0.049615038006919514}, "p50": {"p_at_least_one_hit": 0.6753289686009674, "p_at_least_one_hr": 0.13672118486815288, "p_over_0_5_bb": 0.2958349635336952, "p_over_0_5_doubles": 0.14303217490955478, "p_over_0_5_hits": 0.6753289686009674, "p_over_0_5_hrr": 0.8142378163698113, "p_over_0_5_k": 0.6263461918870983, "p_over_0_5_rbis": 0.46047231181389203, "p_over_0_5_runs": 0.3726801145119929, "p_over_0_5_tb": 0.6753289686009675, "p_over_1_5_bb": 0.038914962998477964, "p_over_1_5_doubles": 0.010754987901708368, "p_over_1_5_hits": 0.2532031077863559, "p_over_1_5_hrr": 0.501546560699252, "p_over_1_5_k": 0.2119786263358432, "p_over_1_5_rbis": 0.12755072331871253, "p_over_1_5_runs": 0.08016167730035462, "p_over_1_5_tb": 0.4013284723501611, "p_over_2_5_hits": 0.04789723540888857, "p_over_2_5_hrr": 0.23837184057569583, "p_over_2_5_k": 0.03560791335892244, "p_over_2_5_rbis": 0.024834230251612577, "p_over_2_5_tb": 0.24574713915918775, "p_over_3_5_hrr": 0.0907055572880835, "p_over_3_5_tb": 0.18047769313905013}, "p95": {"p_at_least_one_hit": 0.80148505477515, "p_at_least_one_hr": 0.27339308611971136, "p_over_0_5_bb": 0.47484116402618237, "p_over_0_5_doubles": 0.27465931166192536, "p_over_0_5_hits": 0.80148505477515, "p_over_0_5_hrr": 0.8728825618755067, "p_over_0_5_k": 0.7814585784560134, "p_over_0_5_rbis": 0.5438966169660426, "p_over_0_5_runs": 0.4386853530632022, "p_over_0_5_tb": 0.8014850547751498, "p_over_1_5_bb": 0.1085520952053518, "p_over_1_5_doubles": 0.04174239275186986, "p_over_1_5_hits": 0.40796359712926744, "p_over_1_5_hrr": 0.6106845522525697, "p_over_1_5_k": 0.38768628973249974, "p_over_1_5_rbis": 0.18583914282462843, "p_over_1_5_runs": 0.11454092796548498, "p_over_1_5_tb": 0.5378328851583077, "p_over_2_5_hits": 0.1113894017919812, "p_over_2_5_hrr": 0.3402739883498378, "p_over_2_5_k": 0.11304304705363788, "p_over_2_5_rbis": 0.045295178936747726, "p_over_2_5_tb": 0.3744380966938162, "p_over_3_5_hrr": 0.15435375405731744, "p_over_3_5_tb": 0.2969314997218361}}, "model": {"expected_ab": 3.86, "expected_hits": 0.971, "expected_hrs": 0.151, "expected_pa": 4.3, "expected_rbis": 0.617, "expected_runs": 0.467, "expected_strikeouts": 0.912, "expected_total_bases": 1.635, "p_at_least_one_hit": 0.673, "p_at_least_one_hr": 0.142, "p_hit_per_ab": 0.251, "p_hr_per_pa": 0.0351, "p_k_per_pa": 0.212, "p_over_0_5_hits": 0.686, "p_over_0_5_k": 0.615, "p_over_0_5_rbis": 0.461, "p_over_0_5_runs": 0.373, "p_over_0_5_tb": 0.686, "p_over_1_5_hits": 0.264, "p_over_1_5_k": 0.2, "p_over_1_5_rbis": 0.128, "p_over_1_5_runs": 0.08, "p_over_1_5_tb": 0.409, "p_over_2_5_hits": 0.052, "p_over_2_5_k": 0.032, "p_over_2_5_rbis": 0.025, "p_over_2_5_tb": 0.25, "p_over_3_5_tb": 0.18}, "name": "Amed Rosario", "odds": {}, "platoon_split": {"airOuts": 5, "atBats": 34, "atBatsPerHomeRun": "17.00", "avg": ".294", "babip": ".333", "baseOnBalls": 2, "catchersInterference": 0, "doubles": 1, "gamesPlayed": 18, "groundIntoDoublePlay": 1, "groundIntoTriplePlay": 0, "groundOuts": 11, "groundOutsToAirouts": "2.20", "hitByPitch": 0, "hits": 10, "homeRuns": 2, "intentionalWalks": 0, "leftOnBase": 14, "numberOfPitches": 121, "obp": ".324", "ops": ".824", "plateAppearances": 37, "rbi": 7, "sacBunts": 0, "sacFlies": 1, "slg": ".500", "strikeOuts": 9, "totalBases": 17, "triples": 0}, "position": "3B", "season": {"AB": 71, "AVG": ".268", "BB%": 7.6, "H": 19, "HR": 4, "K%": 19.0, "OBP": ".316", "OPS": ".809", "PA": 79, "SLG": ".493"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.9361702127659575, "bb": {"batter_bb_rate": 0.08097165991902834, "bp_bb_rate": null, "combined_bb_per_pa": 0.08097165991902834, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.048, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.04310344827586207, "recent_2b": 0.04918032786885246, "season_2b": 0.04918032786885246, "venue_2b": null, "xslg_lift": 0.0}, "hit": {"blended_avg": 0.24724229443327247, "platoon_avg": 0.21982758620689655, "recent_avg": 0.2336065573770492, "recent_pa": 47.0, "season_avg": 0.2336065573770492, "statcast_ba_diff": null, "statcast_lift": 0.0, "venue_avg": null, "venue_key": "home", "venue_pa": 22.0, "weights": {"platoon": 0.25, "recent": 0.15, "season": 0.6, "venue": 0}}, "hr": {"barrel_pct": null, "base_rate": 0.0247638326585695, "bp_hr_per_9": null, "contact_mult": 1.0, "effective_hr_per_9": 1.2, "final": 0.0247638326585695, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": null, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.2987704918032787, "blended_batter_k": 0.2987704918032787, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.2987704918032787, "pitcher_k_rate": 0.225, "recent_k_rate": 0.22672064777327935, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.04796495195025438, "per_ab_outcomes": {"1B": 0.16382280552413733, "2B": 0.04918032786885246, "3B": 0.007786885245901639, "HR": 0.026452275794381058, "out": 0.7527577055667275}, "rbis": {"final": 0.4856108597285068, "lineup_spot": null, "platoon_rbi_per_g": 0.5058823529411764, "pq_mult": 1.0, "season_rbi_per_g": 0.47692307692307695, "spot_mult": 1.0}, "runs": {"final": 0.4461538461538462, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.4461538461538462, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 641555, "last_15": {"atBats": 44, "avg": 0.182, "baseOnBalls": 3, "doubles": 3, "games": 15, "hits": 8, "homeRuns": 0, "hrRate": 0.0, "kRate": 0.234, "obp": 0.234, "plateAppearances": 47, "rbi": 6, "slg": 0.295, "strikeOuts": 11, "totalBases": 13, "triples": 1}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.45031953748504494, "p_at_least_one_hr": 0.003994003998999962, "p_over_0_5_bb": 0.04900995010000009, "p_over_0_5_doubles": 0.0, "p_over_0_5_hits": 0.45031953748504494, "p_over_0_5_hrr": 0.6782221470891752, "p_over_0_5_k": 0.5803953945260455, "p_over_0_5_rbis": 0.3075897681701274, "p_over_0_5_runs": 0.29197430091461285, "p_over_0_5_tb": 0.45031953748504505, "p_over_1_5_bb": 0.0009801496000001464, "p_over_1_5_doubles": 0.0, "p_over_1_5_hits": 0.09357038768703618, "p_over_1_5_hrr": 0.3133602123908983, "p_over_1_5_k": 0.173409942252023, "p_over_1_5_rbis": 0.05307591502947273, "p_over_1_5_runs": 0.04751080710057365, "p_over_1_5_tb": 0.22976332453303702, "p_over_2_5_hits": 0.008613299270139096, "p_over_2_5_hrr": 0.10650285693974071, "p_over_2_5_k": 0.025380264846910472, "p_over_2_5_rbis": 0.006299236651026496, "p_over_2_5_tb": 0.10639206286177967, "p_over_3_5_hrr": 0.028318094549857897, "p_over_3_5_tb": 0.040275249544869364}, "p50": {"p_at_least_one_hit": 0.6805977332507331, "p_at_least_one_hr": 0.1031954704862853, "p_over_0_5_bb": 0.287534608764456, "p_over_0_5_doubles": 0.17270393750532032, "p_over_0_5_hits": 0.6805977332507331, "p_over_0_5_hrr": 0.7991943489359798, "p_over_0_5_k": 0.7532464792947614, "p_over_0_5_rbis": 0.38635108842099386, "p_over_0_5_runs": 0.3593599672696587, "p_over_0_5_tb": 0.680597733250733, "p_over_1_5_bb": 0.0361764024721849, "p_over_1_5_doubles": 0.015854682810849008, "p_over_1_5_hits": 0.25877390110217635, "p_over_1_5_hrr": 0.4768173926561614, "p_over_1_5_k": 0.34637975292580125, "p_over_1_5_rbis": 0.08668649199494938, "p_over_1_5_runs": 0.0740909358911016, "p_over_1_5_tb": 0.40443797764554285, "p_over_2_5_hits": 0.04958747351407955, "p_over_2_5_hrr": 0.21804254894644348, "p_over_2_5_k": 0.08505812229248233, "p_over_2_5_rbis": 0.013518538254007506, "p_over_2_5_tb": 0.235508311478331, "p_over_3_5_hrr": 0.07956197326727932, "p_over_3_5_tb": 0.1455105891374034}, "p95": {"p_at_least_one_hit": 0.8159889850143974, "p_at_least_one_hr": 0.2525019998822742, "p_over_0_5_bb": 0.4994897291645193, "p_over_0_5_doubles": 0.3384717347484124, "p_over_0_5_hits": 0.8159889850143974, "p_over_0_5_hrr": 0.8700878080125547, "p_over_0_5_k": 0.8960740437494517, "p_over_0_5_rbis": 0.4605594604483175, "p_over_0_5_runs": 0.42364210725540064, "p_over_0_5_tb": 0.8159889850143975, "p_over_1_5_bb": 0.12508664748207132, "p_over_1_5_doubles": 0.06512655719657778, "p_over_1_5_hits": 0.4380769747352772, "p_over_1_5_hrr": 0.604950469689149, "p_over_1_5_k": 0.59196241542524, "p_over_1_5_rbis": 0.1276045063961898, "p_over_1_5_runs": 0.10605365235076103, "p_over_1_5_tb": 0.5700367369021948, "p_over_2_5_hits": 0.1270518106413857, "p_over_2_5_hrr": 0.33439153639051866, "p_over_2_5_k": 0.2309848062218227, "p_over_2_5_rbis": 0.02485082614814338, "p_over_2_5_tb": 0.36630040613894654, "p_over_3_5_hrr": 0.15033060944957077, "p_over_3_5_tb": 0.2850745622665593}}, "model": {"expected_ab": 4.03, "expected_hits": 0.995, "expected_hrs": 0.106, "expected_pa": 4.3, "expected_rbis": 0.486, "expected_runs": 0.446, "expected_strikeouts": 1.285, "expected_total_bases": 1.575, "p_at_least_one_hit": 0.681, "p_at_least_one_hr": 0.102, "p_hit_per_ab": 0.247, "p_hr_per_pa": 0.0248, "p_k_per_pa": 0.299, "p_over_0_5_hits": 0.679, "p_over_0_5_k": 0.758, "p_over_0_5_rbis": 0.385, "p_over_0_5_runs": 0.36, "p_over_0_5_tb": 0.679, "p_over_1_5_hits": 0.257, "p_over_1_5_k": 0.346, "p_over_1_5_rbis": 0.086, "p_over_1_5_runs": 0.074, "p_over_1_5_tb": 0.399, "p_over_2_5_hits": 0.049, "p_over_2_5_k": 0.083, "p_over_2_5_rbis": 0.013, "p_over_2_5_tb": 0.224, "p_over_3_5_tb": 0.143}, "name": "J.C. Escarra", "odds": {}, "platoon_split": {"airOuts": 7, "atBats": 32, "atBatsPerHomeRun": "-.--", "avg": ".063", "babip": ".091", "baseOnBalls": 2, "catchersInterference": 0, "doubles": 1, "gamesPlayed": 13, "groundIntoDoublePlay": 0, "groundIntoTriplePlay": 0, "groundOuts": 13, "groundOutsToAirouts": "1.86", "hitByPitch": 0, "hits": 2, "homeRuns": 0, "intentionalWalks": 0, "leftOnBase": 18, "numberOfPitches": 129, "obp": ".118", "ops": ".274", "plateAppearances": 34, "rbi": 4, "sacBunts": 0, "sacFlies": 0, "slg": ".156", "strikeOuts": 10, "totalBases": 5, "triples": 1}, "position": "C", "season": {"AB": 44, "AVG": ".182", "BB%": 6.4, "H": 8, "HR": 0, "K%": 23.4, "OBP": ".234", "OPS": ".529", "PA": 47, "SLG": ".295"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8203592814371258, "bb": {"batter_bb_rate": 0.1226158038147139, "bp_bb_rate": null, "combined_bb_per_pa": 0.12261580381471392, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0558, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.043333333333333335, "recent_2b": 0.05555555555555555, "season_2b": 0.04451038575667656, "venue_2b": 0.05263157894736842, "xslg_lift": 0.0075}, "hit": {"blended_avg": 0.2248213687050241, "platoon_avg": 0.21666666666666667, "recent_avg": 0.23412698412698413, "recent_pa": 61.0, "season_avg": 0.2166172106824926, "statcast_ba_diff": -0.047000000000000014, "statcast_lift": 0.0, "venue_avg": 0.24060150375939848, "venue_key": "home", "venue_pa": 80.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 14.7, "base_rate": 0.0320893193072439, "bp_hr_per_9": null, "contact_mult": 1.108, "effective_hr_per_9": 1.2, "final": 0.035564823631317424, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": -0.07800000000000001, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.16436363636363638, "blended_batter_k": 0.1740390107976315, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.1740390107976315, "pitcher_k_rate": 0.225, "recent_k_rate": 0.20306513409961685, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.05578658399303145, "per_ab_outcomes": {"1B": 0.13132025953768425, "2B": 0.04451038575667656, "3B": 0.005637982195845697, "HR": 0.04335274121481759, "out": 0.7751786312949759}, "rbis": {"final": 0.5516758457907159, "lineup_spot": null, "platoon_rbi_per_g": 0.559349593495935, "pq_mult": 1.0, "season_rbi_per_g": 0.5483870967741935, "spot_mult": 1.0}, "runs": {"final": 0.5376344086021505, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.5376344086021505, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 663757, "last_15": {"atBats": 52, "avg": 0.192, "baseOnBalls": 8, "doubles": 5, "games": 15, "hits": 10, "homeRuns": 2, "hrRate": 0.0328, "kRate": 0.1311, "obp": 0.295, "plateAppearances": 61, "rbi": 10, "slg": 0.404, "strikeOuts": 8, "totalBases": 21, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.4364300024199548, "p_at_least_one_hr": 0.05907984833825419, "p_over_0_5_bb": 0.28990760776152946, "p_over_0_5_doubles": 0.09070133930033375, "p_over_0_5_hits": 0.4364300024199548, "p_over_0_5_hrr": 0.7055818884048846, "p_over_0_5_k": 0.419596046794368, "p_over_0_5_rbis": 0.34451845399506564, "p_over_0_5_runs": 0.34435816043395406, "p_over_0_5_tb": 0.4364300024199547, "p_over_1_5_bb": 0.03609317618704766, "p_over_1_5_doubles": 0.00424369579856787, "p_over_1_5_hits": 0.08028772990502087, "p_over_1_5_hrr": 0.34558085476845446, "p_over_1_5_k": 0.08135808055759397, "p_over_1_5_rbis": 0.06765279681058312, "p_over_1_5_runs": 0.06758511079189322, "p_over_1_5_tb": 0.234818542982418, "p_over_2_5_hits": 0.005267579307498216, "p_over_2_5_hrr": 0.1254844355686645, "p_over_2_5_k": 0.0074408623175311606, "p_over_2_5_rbis": 0.00918082868623693, "p_over_2_5_tb": 0.11914392284352779, "p_over_3_5_hrr": 0.035776482501151285, "p_over_3_5_tb": 0.0729400192317039}, "p50": {"p_at_least_one_hit": 0.590738015291173, "p_at_least_one_hr": 0.14435715237161195, "p_over_0_5_bb": 0.4233724273997268, "p_over_0_5_doubles": 0.1756633439516364, "p_over_0_5_hits": 0.590738015291173, "p_over_0_5_hrr": 0.7744030973168075, "p_over_0_5_k": 0.5479568157661523, "p_over_0_5_rbis": 0.42315618416696277, "p_over_0_5_runs": 0.41679998736354673, "p_over_0_5_tb": 0.5907380152911729, "p_over_1_5_bb": 0.08394100921645353, "p_over_1_5_doubles": 0.01642106405074384, "p_over_1_5_hits": 0.17285301205262527, "p_over_1_5_hrr": 0.438488070989247, "p_over_1_5_k": 0.1520090038544929, "p_over_1_5_rbis": 0.10578610064835292, "p_over_1_5_runs": 0.10232391586472733, "p_over_1_5_tb": 0.3478238113070127, "p_over_2_5_hits": 0.020954993466743566, "p_over_2_5_hrr": 0.18839841202104268, "p_over_2_5_k": 0.02131405368775685, "p_over_2_5_rbis": 0.0184801721214507, "p_over_2_5_tb": 0.21243987375929665, "p_over_3_5_hrr": 0.06427012039798308, "p_over_3_5_tb": 0.16309772230929195}, "p95": {"p_at_least_one_hit": 0.7136251513481399, "p_at_least_one_hr": 0.24238147265905619, "p_over_0_5_bb": 0.5443950204260899, "p_over_0_5_doubles": 0.2612236454319222, "p_over_0_5_hits": 0.7136251513481399, "p_over_0_5_hrr": 0.8307161504025479, "p_over_0_5_k": 0.6747095498524189, "p_over_0_5_rbis": 0.5042937323116973, "p_over_0_5_runs": 0.4860647881782988, "p_over_0_5_tb": 0.71362515134814, "p_over_1_5_bb": 0.15344556778237894, "p_over_1_5_doubles": 0.037551689464002, "p_over_1_5_hits": 0.29323492388912964, "p_over_1_5_hrr": 0.5300378350451762, "p_over_1_5_k": 0.26353574349653086, "p_over_1_5_rbis": 0.15642108730411752, "p_over_1_5_runs": 0.143959667737243, "p_over_1_5_tb": 0.4696569437536816, "p_over_2_5_hits": 0.061814535312317065, "p_over_2_5_hrr": 0.2630086720708844, "p_over_2_5_k": 0.0582070140806249, "p_over_2_5_rbis": 0.03435749336478955, "p_over_2_5_tb": 0.3275018111141665, "p_over_3_5_hrr": 0.10491152918469238, "p_over_3_5_tb": 0.27134314835350226}}, "model": {"expected_ab": 3.53, "expected_hits": 0.793, "expected_hrs": 0.153, "expected_pa": 4.3, "expected_rbis": 0.552, "expected_runs": 0.538, "expected_strikeouts": 0.748, "expected_total_bases": 1.449, "p_at_least_one_hit": 0.593, "p_at_least_one_hr": 0.144, "p_hit_per_ab": 0.225, "p_hr_per_pa": 0.0356, "p_k_per_pa": 0.174, "p_over_0_5_hits": 0.639, "p_over_0_5_k": 0.535, "p_over_0_5_rbis": 0.424, "p_over_0_5_runs": 0.416, "p_over_0_5_tb": 0.639, "p_over_1_5_hits": 0.22, "p_over_1_5_k": 0.142, "p_over_1_5_rbis": 0.106, "p_over_1_5_runs": 0.102, "p_over_1_5_tb": 0.394, "p_over_2_5_hits": 0.038, "p_over_2_5_k": 0.018, "p_over_2_5_rbis": 0.019, "p_over_2_5_tb": 0.249, "p_over_3_5_tb": 0.189}, "name": "Trent Grisham", "odds": {}, "platoon_split": {"airOuts": 41, "atBats": 100, "atBatsPerHomeRun": "25.00", "avg": ".160", "babip": ".152", "baseOnBalls": 22, "catchersInterference": 0, "doubles": 4, "gamesPlayed": 39, "groundIntoDoublePlay": 3, "groundIntoTriplePlay": 0, "groundOuts": 26, "groundOutsToAirouts": "0.63", "hitByPitch": 0, "hits": 16, "homeRuns": 4, "intentionalWalks": 0, "leftOnBase": 33, "numberOfPitches": 504, "obp": ".309", "ops": ".649", "plateAppearances": 123, "rbi": 16, "sacBunts": 0, "sacFlies": 1, "slg": ".340", "strikeOuts": 18, "totalBases": 34, "triples": 1}, "position": "CF", "season": {"AB": 137, "AVG": ".175", "BB%": 16.8, "H": 24, "HR": 6, "K%": 16.8, "OBP": ".311", "OPS": ".676", "PA": 167, "SLG": ".365"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.9032258064516129, "bb": {"batter_bb_rate": 0.08950617283950617, "bp_bb_rate": null, "combined_bb_per_pa": 0.08950617283950617, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0454, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.03859649122807018, "recent_2b": 0.04878048780487805, "season_2b": 0.038461538461538464, "venue_2b": 0.048582995951417005, "xslg_lift": 0.0038}, "hit": {"blended_avg": 0.21816687223353748, "platoon_avg": 0.23157894736842105, "recent_avg": 0.23983739837398374, "recent_pa": 48.0, "season_avg": 0.22756410256410256, "statcast_ba_diff": -0.0069999999999999785, "statcast_lift": 0.0, "venue_avg": 0.24696356275303644, "venue_key": "home", "venue_pa": 57.0, "weights": {"platoon": 0.25, "recent": 0.15, "season": 0.45, "venue": 0.15}}, "hr": {"barrel_pct": 8.3, "base_rate": 0.028769841269841265, "bp_hr_per_9": null, "contact_mult": 1.002, "effective_hr_per_9": 1.2, "final": 0.02883262857142857, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": -0.033999999999999975, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.2883551401869158, "blended_batter_k": 0.2883551401869158, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.2883551401869158, "pitcher_k_rate": 0.225, "recent_k_rate": 0.24193548387096775, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.045373161468398954, "per_ab_outcomes": {"1B": 0.14489887961187342, "2B": 0.038461538461538464, "3B": 0.0028846153846153843, "HR": 0.031921838775510206, "out": 0.7818331277664625}, "rbis": {"final": 0.44008788159111933, "lineup_spot": null, "platoon_rbi_per_g": 0.5031914893617021, "pq_mult": 1.0, "season_rbi_per_g": 0.41304347826086957, "spot_mult": 1.0}, "runs": {"final": 0.391304347826087, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.391304347826087, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 641857, "last_15": {"atBats": 46, "avg": 0.217, "baseOnBalls": 2, "doubles": 3, "games": 15, "hits": 10, "homeRuns": 1, "hrRate": 0.0208, "kRate": 0.3125, "obp": 0.25, "plateAppearances": 48, "rbi": 6, "slg": 0.348, "strikeOuts": 15, "totalBases": 16, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.46526334378693224, "p_at_least_one_hr": 0.015701705387972442, "p_over_0_5_bb": 0.16643838401972855, "p_over_0_5_doubles": 0.034015621786924966, "p_over_0_5_hits": 0.46526334378693224, "p_over_0_5_hrr": 0.668071678390656, "p_over_0_5_k": 0.64437230992234, "p_over_0_5_rbis": 0.28090413019017046, "p_over_0_5_runs": 0.25075121127805167, "p_over_0_5_tb": 0.46526334378693235, "p_over_1_5_bb": 0.011184288588799385, "p_over_1_5_doubles": 0.0005852048590431203, "p_over_1_5_hits": 0.09877524270785809, "p_over_1_5_hrr": 0.3020090988457298, "p_over_1_5_k": 0.22481078695968648, "p_over_1_5_rbis": 0.04377465013702697, "p_over_1_5_runs": 0.034454932016409145, "p_over_1_5_tb": 0.23312025563388328, "p_over_2_5_hits": 0.008286041122400611, "p_over_2_5_hrr": 0.1001555608689434, "p_over_2_5_k": 0.04015730748428836, "p_over_2_5_rbis": 0.0046766712227934715, "p_over_2_5_tb": 0.10576033675581173, "p_over_3_5_hrr": 0.025951762446647653, "p_over_3_5_tb": 0.050108885699306986}, "p50": {"p_at_least_one_hit": 0.6219752574320159, "p_at_least_one_hr": 0.11936002992046313, "p_over_0_5_bb": 0.3197863650183681, "p_over_0_5_doubles": 0.15852907239390424, "p_over_0_5_hits": 0.6219752574320159, "p_over_0_5_hrr": 0.7508461095863592, "p_over_0_5_k": 0.7630306578161056, "p_over_0_5_rbis": 0.3557880835173709, "p_over_0_5_runs": 0.3169666576209117, "p_over_0_5_tb": 0.6219752574320159, "p_over_1_5_bb": 0.04552484659549916, "p_over_1_5_doubles": 0.013287980710765757, "p_over_1_5_hits": 0.2047399051318446, "p_over_1_5_hrr": 0.4046008000893727, "p_over_1_5_k": 0.35502912676272025, "p_over_1_5_rbis": 0.07251035957296192, "p_over_1_5_runs": 0.05658642222644783, "p_over_1_5_tb": 0.344655135813323, "p_over_2_5_hits": 0.03347665619613038, "p_over_2_5_hrr": 0.16401492332535406, "p_over_2_5_k": 0.08850479919567644, "p_over_2_5_rbis": 0.010227850642309022, "p_over_2_5_tb": 0.2003474091534396, "p_over_3_5_hrr": 0.052568765527770345, "p_over_3_5_tb": 0.1464485192091485}, "p95": {"p_at_least_one_hit": 0.7333910745907881, "p_at_least_one_hr": 0.22355114589814984, "p_over_0_5_bb": 0.4983350972258098, "p_over_0_5_doubles": 0.2659440031739506, "p_over_0_5_hits": 0.7333910745907881, "p_over_0_5_hrr": 0.8195029130735135, "p_over_0_5_k": 0.8711362957201708, "p_over_0_5_rbis": 0.4245270715827453, "p_over_0_5_runs": 0.3823526649742601, "p_over_0_5_tb": 0.733391074590788, "p_over_1_5_bb": 0.12527701871910402, "p_over_1_5_doubles": 0.038995937557620874, "p_over_1_5_hits": 0.31709756893958685, "p_over_1_5_hrr": 0.5104845648084751, "p_over_1_5_k": 0.5424865690847522, "p_over_1_5_rbis": 0.10654197087369799, "p_over_1_5_runs": 0.08474693089333152, "p_over_1_5_tb": 0.46154538672766077, "p_over_2_5_hits": 0.07272605196729243, "p_over_2_5_hrr": 0.24595857940200427, "p_over_2_5_k": 0.2124303365827871, "p_over_2_5_rbis": 0.018688555639168936, "p_over_2_5_tb": 0.29477280396029, "p_over_3_5_hrr": 0.094998833595909, "p_over_3_5_tb": 0.23678690712573167}}, "model": {"expected_ab": 3.88, "expected_hits": 0.847, "expected_hrs": 0.124, "expected_pa": 4.3, "expected_rbis": 0.44, "expected_runs": 0.391, "expected_strikeouts": 1.24, "expected_total_bases": 1.391, "p_at_least_one_hit": 0.616, "p_at_least_one_hr": 0.118, "p_hit_per_ab": 0.218, "p_hr_per_pa": 0.0288, "p_k_per_pa": 0.288, "p_over_0_5_hits": 0.626, "p_over_0_5_k": 0.744, "p_over_0_5_rbis": 0.356, "p_over_0_5_runs": 0.324, "p_over_0_5_tb": 0.626, "p_over_1_5_hits": 0.209, "p_over_1_5_k": 0.328, "p_over_1_5_rbis": 0.073, "p_over_1_5_runs": 0.059, "p_over_1_5_tb": 0.349, "p_over_2_5_hits": 0.035, "p_over_2_5_k": 0.075, "p_over_2_5_rbis": 0.01, "p_over_2_5_tb": 0.199, "p_over_3_5_tb": 0.143}, "name": "Ryan McMahon", "odds": {}, "platoon_split": {"airOuts": 22, "atBats": 85, "atBatsPerHomeRun": "28.33", "avg": ".200", "babip": ".264", "baseOnBalls": 9, "catchersInterference": 0, "doubles": 2, "gamesPlayed": 35, "groundIntoDoublePlay": 2, "groundIntoTriplePlay": 0, "groundOuts": 17, "groundOutsToAirouts": "0.77", "hitByPitch": 0, "hits": 17, "homeRuns": 3, "intentionalWalks": 0, "leftOnBase": 31, "numberOfPitches": 380, "obp": ".277", "ops": ".606", "plateAppearances": 94, "rbi": 11, "sacBunts": 0, "sacFlies": 0, "slg": ".329", "strikeOuts": 29, "totalBases": 28, "triples": 0}, "position": "3B", "season": {"AB": 112, "AVG": ".196", "BB%": 9.7, "H": 22, "HR": 3, "K%": 31.5, "OBP": ".274", "OPS": ".578", "PA": 124, "SLG": ".304"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8947368421052632, "bb": {"batter_bb_rate": 0.0889487870619946, "bp_bb_rate": null, "combined_bb_per_pa": 0.0889487870619946, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0437, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.049342105263157895, "recent_2b": 0.04365079365079365, "season_2b": 0.0453257790368272, "venue_2b": 0.04198473282442748, "xslg_lift": -0.0013}, "hit": {"blended_avg": 0.20683285111550392, "platoon_avg": 0.23355263157894737, "recent_avg": 0.23015873015873015, "recent_pa": 58.0, "season_avg": 0.22662889518413598, "statcast_ba_diff": 0.01200000000000001, "statcast_lift": 0.0, "venue_avg": 0.22900763358778625, "venue_key": "home", "venue_pa": 76.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 5.9, "base_rate": 0.027488570063802925, "bp_hr_per_9": null, "contact_mult": 0.971, "effective_hr_per_9": 1.2, "final": 0.026694084416390866, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": 0.008000000000000007, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.2846847826086956, "blended_batter_k": 0.2735911063363667, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.2735911063363667, "pitcher_k_rate": 0.225, "recent_k_rate": 0.24031007751937986, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.04367655998652611, "per_ab_outcomes": {"1B": 0.12912293207188894, "2B": 0.0453257790368272, "3B": 0.0025495750708215293, "HR": 0.02983456493596626, "out": 0.793167148884496}, "rbis": {"final": 0.3936345939933259, "lineup_spot": null, "platoon_rbi_per_g": 0.3336206896551724, "pq_mult": 1.0, "season_rbi_per_g": 0.41935483870967744, "spot_mult": 1.0}, "runs": {"final": 0.45161290322580644, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.45161290322580644, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 665862, "last_15": {"atBats": 52, "avg": 0.173, "baseOnBalls": 5, "doubles": 2, "games": 15, "hits": 9, "homeRuns": 1, "hrRate": 0.0172, "kRate": 0.2931, "obp": 0.241, "plateAppearances": 58, "rbi": 4, "slg": 0.269, "strikeOuts": 17, "totalBases": 14, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.4440504734319899, "p_at_least_one_hr": 0.02309692128436247, "p_over_0_5_bb": 0.19890035183481258, "p_over_0_5_doubles": 0.05677546038702319, "p_over_0_5_hits": 0.4440504734319899, "p_over_0_5_hrr": 0.6595771778329154, "p_over_0_5_k": 0.6321000306068967, "p_over_0_5_rbis": 0.26076811342807993, "p_over_0_5_runs": 0.2788629357658612, "p_over_0_5_tb": 0.4440504734319898, "p_over_1_5_bb": 0.01703153972450422, "p_over_1_5_doubles": 0.001643125169335402, "p_over_1_5_hits": 0.08397980041661723, "p_over_1_5_hrr": 0.2927488332954178, "p_over_1_5_k": 0.21405529748849128, "p_over_1_5_rbis": 0.03741391299038943, "p_over_1_5_runs": 0.04310443894022409, "p_over_1_5_tb": 0.2283753511698895, "p_over_2_5_hits": 0.006515336738085464, "p_over_2_5_hrr": 0.09510780338515601, "p_over_2_5_k": 0.03607696867839605, "p_over_2_5_rbis": 0.0036713893253834673, "p_over_2_5_tb": 0.10600643862502182, "p_over_3_5_hrr": 0.024117330074014842, "p_over_3_5_tb": 0.04677176283539296}, "p50": {"p_at_least_one_hit": 0.5976246682675455, "p_at_least_one_hr": 0.10768088319050939, "p_over_0_5_bb": 0.3225556742100145, "p_over_0_5_doubles": 0.15323047571924553, "p_over_0_5_hits": 0.5976246682675455, "p_over_0_5_hrr": 0.7426619565932125, "p_over_0_5_k": 0.7346737114570685, "p_over_0_5_rbis": 0.32276840553414343, "p_over_0_5_runs": 0.3588880884877146, "p_over_0_5_tb": 0.5976246682675456, "p_over_1_5_bb": 0.045940257990984, "p_over_1_5_doubles": 0.012390069982198604, "p_over_1_5_hits": 0.18594584261008174, "p_over_1_5_hrr": 0.3933603768004321, "p_over_1_5_k": 0.31940399404063124, "p_over_1_5_rbis": 0.058822826202158174, "p_over_1_5_runs": 0.07388098788798825, "p_over_1_5_tb": 0.3446776505910541, "p_over_2_5_hits": 0.02821799719153162, "p_over_2_5_hrr": 0.15629555725320687, "p_over_2_5_k": 0.07349625628297796, "p_over_2_5_rbis": 0.007387490477866576, "p_over_2_5_tb": 0.19362985271374303, "p_over_3_5_hrr": 0.049034416893638744, "p_over_3_5_tb": 0.13528174756354597}, "p95": {"p_at_least_one_hit": 0.7081907308502229, "p_at_least_one_hr": 0.19219209841271567, "p_over_0_5_bb": 0.46026503283859566, "p_over_0_5_doubles": 0.24375983539337687, "p_over_0_5_hits": 0.7081907308502229, "p_over_0_5_hrr": 0.800423222797394, "p_over_0_5_k": 0.8489393034995244, "p_over_0_5_rbis": 0.39303926386404386, "p_over_0_5_runs": 0.42698204597853495, "p_over_0_5_tb": 0.7081907308502228, "p_over_1_5_bb": 0.10281660246833457, "p_over_1_5_doubles": 0.03246915024527097, "p_over_1_5_hits": 0.28730419301680676, "p_over_1_5_hrr": 0.4787940164387484, "p_over_1_5_k": 0.5019646565588393, "p_over_1_5_rbis": 0.08998912466182829, "p_over_1_5_runs": 0.1079037430539842, "p_over_1_5_tb": 0.4416181495297789, "p_over_2_5_hits": 0.05965702354177371, "p_over_2_5_hrr": 0.21963223461010206, "p_over_2_5_k": 0.18317516754245822, "p_over_2_5_rbis": 0.014333994599254773, "p_over_2_5_tb": 0.27172736405757714, "p_over_3_5_hrr": 0.08041430325158394, "p_over_3_5_tb": 0.2230272213755595}}, "model": {"expected_ab": 3.85, "expected_hits": 0.796, "expected_hrs": 0.115, "expected_pa": 4.3, "expected_rbis": 0.394, "expected_runs": 0.452, "expected_strikeouts": 1.176, "expected_total_bases": 1.334, "p_at_least_one_hit": 0.59, "p_at_least_one_hr": 0.11, "p_hit_per_ab": 0.207, "p_hr_per_pa": 0.0267, "p_k_per_pa": 0.274, "p_over_0_5_hits": 0.604, "p_over_0_5_k": 0.722, "p_over_0_5_rbis": 0.325, "p_over_0_5_runs": 0.363, "p_over_0_5_tb": 0.604, "p_over_1_5_hits": 0.191, "p_over_1_5_k": 0.302, "p_over_1_5_rbis": 0.06, "p_over_1_5_runs": 0.076, "p_over_1_5_tb": 0.346, "p_over_2_5_hits": 0.03, "p_over_2_5_k": 0.065, "p_over_2_5_rbis": 0.008, "p_over_2_5_tb": 0.193, "p_over_3_5_tb": 0.137}, "name": "Jazz Chisholm Jr.", "odds": {}, "platoon_split": {"airOuts": 28, "atBats": 104, "atBatsPerHomeRun": "34.67", "avg": ".212", "babip": ".284", "baseOnBalls": 11, "catchersInterference": 0, "doubles": 6, "gamesPlayed": 40, "groundIntoDoublePlay": 0, "groundIntoTriplePlay": 0, "groundOuts": 20, "groundOutsToAirouts": "0.71", "hitByPitch": 1, "hits": 22, "homeRuns": 3, "intentionalWalks": 0, "leftOnBase": 42, "numberOfPitches": 477, "obp": ".293", "ops": ".649", "plateAppearances": 116, "rbi": 9, "sacBunts": 0, "sacFlies": 0, "slg": ".356", "strikeOuts": 34, "totalBases": 37, "triples": 0}, "position": "2B", "season": {"AB": 153, "AVG": ".203", "BB%": 9.4, "H": 31, "HR": 4, "K%": 29.2, "OBP": ".281", "OPS": ".608", "PA": 171, "SLG": ".327"}, "vs_pitcher_hand": "R"}, {"diagnostics": {"ab_per_pa": 0.8333333333333334, "bb": {"batter_bb_rate": 0.1125, "bp_bb_rate": null, "combined_bb_per_pa": 0.11250000000000002, "pitcher_bb_rate": 0.085, "sp_bb_rate": 0.085}, "doubles": {"blended_2b": 0.0434, "park_2b_mult": 1.0, "pitcher_2b_allowed_rate": null, "platoon_2b": 0.038314176245210725, "recent_2b": 0.036, "season_2b": 0.03333333333333333, "venue_2b": 0.04132231404958678, "xslg_lift": 0.0075}, "hit": {"blended_avg": 0.22506505889617173, "platoon_avg": 0.23754789272030652, "recent_avg": 0.232, "recent_pa": 56.0, "season_avg": 0.22333333333333333, "statcast_ba_diff": -0.04200000000000001, "statcast_lift": 0.0, "venue_avg": 0.23553719008264462, "venue_key": "home", "venue_pa": 57.0, "weights": {"platoon": 0.2, "recent": 0.25, "season": 0.4, "venue": 0.15}}, "hr": {"barrel_pct": 5.4, "base_rate": 0.028426177536231886, "bp_hr_per_9": null, "contact_mult": 0.926, "effective_hr_per_9": 1.2, "final": 0.026328166447463767, "park_mult": 1.0, "pitcher_mult": 1.0, "slg_diff": -0.08299999999999996, "sp_hr_per_9": 1.2, "weather_mult": 1.0}, "k": {"batter_k_rate": 0.2375, "blended_batter_k": 0.23671874999999998, "bp_k_fatigue_mult": 1.0, "bp_k_rate": null, "combined_k_per_pa": 0.23671874999999998, "pitcher_k_rate": 0.225, "recent_k_rate": 0.234375, "sp_days_rest": null, "sp_k_rate": 0.225, "sp_k_rest_mult": 1.0}, "p_2b_full": 0.043415473544219624, "per_ab_outcomes": {"1B": 0.15713792582588187, "2B": 0.03333333333333333, "3B": 0.0029999999999999996, "HR": 0.03159379973695652, "out": 0.7749349411038282}, "rbis": {"final": 0.30393310082435, "lineup_spot": null, "platoon_rbi_per_g": 0.16973684210526313, "pq_mult": 1.0, "season_rbi_per_g": 0.3614457831325301, "spot_mult": 1.0}, "runs": {"final": 0.43373493975903615, "lineup_spot": null, "pq_mult": 1.0, "season_r_per_g": 0.43373493975903615, "spot_mult": 1.0}}, "edges": [], "handedness": "L", "id": 669224, "last_15": {"atBats": 50, "avg": 0.18, "baseOnBalls": 6, "doubles": 0, "games": 15, "hits": 9, "homeRuns": 2, "hrRate": 0.0357, "kRate": 0.2679, "obp": 0.268, "plateAppearances": 56, "rbi": 3, "slg": 0.3, "strikeOuts": 15, "totalBases": 15, "triples": 0}, "lineup_spot": null, "mc_intervals": {"iters": 400, "p5": {"p_at_least_one_hit": 0.4347712159361147, "p_at_least_one_hr": 0.02032208546266323, "p_over_0_5_bb": 0.215956639641541, "p_over_0_5_doubles": 0.05030142641128443, "p_over_0_5_hits": 0.4347712159361147, "p_over_0_5_hrr": 0.6251917993709006, "p_over_0_5_k": 0.5435654551967424, "p_over_0_5_rbis": 0.19807591225599386, "p_over_0_5_runs": 0.28672485600344144, "p_over_0_5_tb": 0.4347712159361145, "p_over_1_5_bb": 0.01928557320301061, "p_over_1_5_doubles": 0.0012868793104732212, "p_over_1_5_hits": 0.08027749048282273, "p_over_1_5_hrr": 0.2573772016119873, "p_over_1_5_k": 0.14807189288980216, "p_over_1_5_rbis": 0.021058123144653385, "p_over_1_5_runs": 0.04571771790143664, "p_over_1_5_tb": 0.19144390308933337, "p_over_2_5_hits": 0.005266500902431193, "p_over_2_5_hrr": 0.0769014568210824, "p_over_2_5_k": 0.019681702431013526, "p_over_2_5_rbis": 0.0015205521072124695, "p_over_2_5_tb": 0.07413394702862638, "p_over_3_5_hrr": 0.017865383291484904, "p_over_3_5_tb": 0.033369736908148595}, "p50": {"p_at_least_one_hit": 0.6029398254784593, "p_at_least_one_hr": 0.11230401385188504, "p_over_0_5_bb": 0.38183074144712126, "p_over_0_5_doubles": 0.14353739106454966, "p_over_0_5_hits": 0.6029398254784593, "p_over_0_5_hrr": 0.7283974788838741, "p_over_0_5_k": 0.6779046736912677, "p_over_0_5_rbis": 0.26393648759515154, "p_over_0_5_runs": 0.35481364507020674, "p_over_0_5_tb": 0.6029398254784594, "p_over_1_5_bb": 0.06679828659609832, "p_over_1_5_doubles": 0.01083311944483234, "p_over_1_5_hits": 0.18477933262305313, "p_over_1_5_hrr": 0.37438651562258163, "p_over_1_5_k": 0.2569279102454627, "p_over_1_5_rbis": 0.03837801664381757, "p_over_1_5_runs": 0.07208260874681449, "p_over_1_5_tb": 0.31413596314870423, "p_over_2_5_hits": 0.026102129743559854, "p_over_2_5_hrr": 0.14367480942379263, "p_over_2_5_k": 0.04962589025111064, "p_over_2_5_rbis": 0.003818075171049151, "p_over_2_5_tb": 0.18115106633539113, "p_over_3_5_hrr": 0.04343706370202283, "p_over_3_5_tb": 0.1309063747220095}, "p95": {"p_at_least_one_hit": 0.7288948291316274, "p_at_least_one_hr": 0.20832089838414514, "p_over_0_5_bb": 0.555742658783466, "p_over_0_5_doubles": 0.24786210450318824, "p_over_0_5_hits": 0.7288948291316274, "p_over_0_5_hrr": 0.8001580362956633, "p_over_0_5_k": 0.7917523548066787, "p_over_0_5_rbis": 0.3258068489465038, "p_over_0_5_runs": 0.418872932279998, "p_over_0_5_tb": 0.7288948291316275, "p_over_1_5_bb": 0.16376789413589776, "p_over_1_5_doubles": 0.033626455627598695, "p_over_1_5_hits": 0.3104734491699941, "p_over_1_5_hrr": 0.4783668295740904, "p_over_1_5_k": 0.4053454558167493, "p_over_1_5_rbis": 0.06001386144250809, "p_over_1_5_runs": 0.10344538818993343, "p_over_1_5_tb": 0.441568129931987, "p_over_2_5_hits": 0.0683029697465295, "p_over_2_5_hrr": 0.21928815859854356, "p_over_2_5_k": 0.12187762717265749, "p_over_2_5_rbis": 0.007620929167901247, "p_over_2_5_tb": 0.28600722061093653, "p_over_3_5_hrr": 0.08022954677734451, "p_over_3_5_tb": 0.2335051869183441}}, "model": {"expected_ab": 3.58, "expected_hits": 0.806, "expected_hrs": 0.113, "expected_pa": 4.3, "expected_rbis": 0.304, "expected_runs": 0.434, "expected_strikeouts": 1.018, "expected_total_bases": 1.287, "p_at_least_one_hit": 0.599, "p_at_least_one_hr": 0.108, "p_hit_per_ab": 0.225, "p_hr_per_pa": 0.0263, "p_k_per_pa": 0.237, "p_over_0_5_hits": 0.639, "p_over_0_5_k": 0.661, "p_over_0_5_rbis": 0.262, "p_over_0_5_runs": 0.352, "p_over_0_5_tb": 0.639, "p_over_1_5_hits": 0.22, "p_over_1_5_k": 0.24, "p_over_1_5_rbis": 0.038, "p_over_1_5_runs": 0.071, "p_over_1_5_tb": 0.347, "p_over_2_5_hits": 0.038, "p_over_2_5_k": 0.044, "p_over_2_5_rbis": 0.004, "p_over_2_5_tb": 0.196, "p_over_3_5_tb": 0.14}, "name": "Austin Wells", "odds": {}, "platoon_split": {"airOuts": 21, "atBats": 61, "atBatsPerHomeRun": "30.50", "avg": ".213", "babip": ".268", "baseOnBalls": 15, "catchersInterference": 0, "doubles": 1, "gamesPlayed": 28, "groundIntoDoublePlay": 1, "groundIntoTriplePlay": 0, "groundOuts": 9, "groundOutsToAirouts": "0.43", "hitByPitch": 0, "hits": 13, "homeRuns": 2, "intentionalWalks": 2, "leftOnBase": 23, "numberOfPitches": 321, "obp": ".368", "ops": ".696", "plateAppearances": 76, "rbi": 3, "sacBunts": 0, "sacFlies": 0, "slg": ".328", "strikeOuts": 18, "totalBases": 20, "triples": 0}, "position": "C", "season": {"AB": 100, "AVG": ".180", "BB%": 15.8, "H": 18, "HR": 3, "K%": 22.5, "OBP": ".308", "OPS": ".588", "PA": 120, "SLG": ".280"}, "vs_pitcher_hand": "R"}, {"id": 683011, "name": "Anthony Volpe", "position": "SS", "season": {"age": 25, "airOuts": 2, "atBats": 3, "atBatsPerHomeRun": "-.--", "avg": ".000", "babip": ".000", "baseOnBalls": 0, "catchersInterference": 0, "caughtStealing": 0, "caughtStealingPercentage": ".---", "doubles": 0, "gamesPlayed": 1, "groundIntoDoublePlay": 0, "groundOuts": 0, "groundOutsToAirouts": "0.00", "hitByPitch": 0, "hits": 0, "homeRuns": 0, "intentionalWalks": 0, "leftOnBase": 3, "numberOfPitches": 18, "obp": ".000", "ops": ".000", "plateAppearances": 3, "rbi": 0, "runs": 0, "sacBunts": 0, "sacFlies": 0, "slg": ".000", "stolenBasePercentage": ".---", "stolenBases": 0, "strikeOuts": 1, "totalBases": 0, "triples": 0}, "skipped_reason": "Insufficient PA this season"}, {"id": 680474, "name": "Max Schuemann", "position": "SS", "season": {"age": 29, "airOuts": 3, "atBats": 11, "atBatsPerHomeRun": "-.--", "avg": ".273", "babip": ".375", "baseOnBalls": 2, "catchersInterference": 0, "caughtStealing": 2, "caughtStealingPercentage": "1.000", "doubles": 2, "gamesPlayed": 7, "groundIntoDoublePlay": 0, "groundOuts": 2, "groundOutsToAirouts": "0.67", "hitByPitch": 0, "hits": 3, "homeRuns": 0, "intentionalWalks": 0, "leftOnBase": 4, "numberOfPitches": 65, "obp": ".385", "ops": ".840", "plateAppearances": 13, "rbi": 1, "runs": 1, "sacBunts": 0, "sacFlies": 0, "slg": ".455", "stolenBasePercentage": ".000", "stolenBases": 0, "strikeOuts": 3, "totalBases": 5, "triples": 0}, "skipped_reason": "Insufficient PA this season"}, {"id": 682987, "name": "Spencer Jones", "position": "RF", "season": {"age": 25, "airOuts": 3, "atBats": 12, "atBatsPerHomeRun": "-.--", "avg": ".083", "babip": ".167", "baseOnBalls": 3, "catchersInterference": 0, "caughtStealing": 0, "caughtStealingPercentage": ".---", "doubles": 0, "gamesPlayed": 5, "groundIntoDoublePlay": 0, "groundOuts": 2, "groundOutsToAirouts": "0.67", "hitByPitch": 0, "hits": 1, "homeRuns": 0, "intentionalWalks": 0, "leftOnBase": 6, "numberOfPitches": 64, "obp": ".267", "ops": ".350", "plateAppearances": 15, "rbi": 1, "runs": 0, "sacBunts": 0, "sacFlies": 0, "slg": ".083", "stolenBasePercentage": ".---", "stolenBases": 0, "strikeOuts": 6, "totalBases": 1, "triples": 0}, "skipped_reason": "Insufficient PA this season"}], "sport": "yankees", "team": "Yankees"};
+
+
+let refreshCooldownTimer = null;
+function startRefreshCooldown(secs) {
+  const btn = document.getElementById('refresh-btn');
+  if (!btn) return;
+  if (refreshCooldownTimer) clearInterval(refreshCooldownTimer);
+  const origLabel = '↻ Refresh (~17 credits)';
+  let remaining = Math.max(0, Math.floor(secs));
+  function tick() {
+    if (remaining <= 0) {
+      btn.disabled = false;
+      btn.textContent = origLabel;
+      clearInterval(refreshCooldownTimer);
+      refreshCooldownTimer = null;
+      return;
+    }
+    const mm = String(Math.floor(remaining / 60)).padStart(2, '0');
+    const ss = String(remaining % 60).padStart(2, '0');
+    btn.disabled = true;
+    btn.textContent = `Cooldown ${mm}:${ss}`;
+    remaining -= 1;
+  }
+  tick();
+  refreshCooldownTimer = setInterval(tick, 1000);
+}
+
+async function loadData(force = false) {
+  const grid = document.getElementById('players-grid');
+  grid.innerHTML = '<div class="loading-pulse">Loading hitter models…</div>';
+  try {
+    let data;
+    if (typeof STATIC_DATA !== 'undefined') {
+      data = STATIC_DATA;
+    } else {
+      const r = await fetch('/yankees/api/props' + (force ? '?refresh=1' : ''));
+      data = await r.json();
+    }
+    if (data && data.no_cache) {
+      grid.innerHTML = '<div class="error" style="padding:24px;">No data cached yet for this team. Click <strong>↻ Refresh</strong> (top right) to fetch fresh odds. Subsequent page visits will be free.</div>';
+      if (data.refresh_cooldown_remaining_sec > 0) {
+        startRefreshCooldown(data.refresh_cooldown_remaining_sec);
+      }
+      return;
+    }
+    renderGameStrip(data.game);
+    renderOddsMeta(data.odds_meta, data.burn, data.generated_at_unix);
+    renderMeta(data);
+    renderTopPicks(data.players || [], data.pitchers || [], data.parlay_top3, data.parlay_top2);
+    const allPlayers = [...(data.pitchers || []), ...(data.players || [])];
+    window._lastPlayers = allPlayers;
+    window._lastGame = data.game || {};
+    renderEdgeFilterToggle(allPlayers);
+    renderPlayers(allPlayers, data.game || {});
+    if (data && data.refresh_cooldown_remaining_sec > 0) {
+      startRefreshCooldown(data.refresh_cooldown_remaining_sec);
+    }
+  } catch (e) {
+    grid.innerHTML = '<div class="error">Failed to load: ' + e.message + '</div>';
+  }
+}
+
+function renderOddsMeta(meta, burn, generatedAtUnix) {
+  const bar = document.getElementById('odds-meta-bar');
+  if (!meta) { bar.hidden = true; return; }
+  bar.hidden = false;
+
+  // Snapshot freshness: when the cached payload is more than 12h old (e.g.,
+  // visiting a no-game team's static page the day after their last game),
+  // the credit count baked in is stale. Show a snapshot-age hint instead.
+  const ageSec = generatedAtUnix ? (Date.now() / 1000 - generatedAtUnix) : 0;
+  const isStale = ageSec > 12 * 3600;
+
+  // No game → nothing actionable to display. Hide credits in that case too.
+  const hideCounts = isStale || !meta.fetched;
+
+  let staleHtml = '';
+  if (isStale && generatedAtUnix) {
+    const ageHrs = Math.floor(ageSec / 3600);
+    const ageStr = ageHrs >= 24 ? `${Math.floor(ageHrs / 24)}d` : `${ageHrs}h`;
+    staleHtml = ` <span class="om-stale" title="snapshot age">snapshot ${ageStr} old</span>`;
+  }
+
+  if (!meta.configured) {
+    bar.className = 'odds-meta-bar status-warn';
+    bar.innerHTML = `<span class="om-tag">ODDS</span> <span>Not configured — set <code>ODDS_API_KEY</code> to enable DraftKings + FanDuel + BetMGM + Caesars lines and edge calculations.</span>`;
+    return;
+  }
+  if (meta.error) {
+    bar.className = 'odds-meta-bar status-err';
+    bar.innerHTML = `<span class="om-tag">ODDS</span> <span>Error: ${meta.error}</span>${staleHtml}`;
+    return;
+  }
+  if (meta.fetched) {
+    bar.className = 'odds-meta-bar status-ok';
+    const credits = (!hideCounts && meta.credits_remaining != null)
+      ? `<span class="om-credits">${meta.credits_remaining} credits remaining</span>` : '';
+    bar.innerHTML = `<span class="om-tag">ODDS</span> <span>DraftKings + FanDuel + BetMGM + Caesars lines loaded — best edges sorted to top.</span> ${credits}${staleHtml}`;
+  } else {
+    bar.className = 'odds-meta-bar status-warn';
+    bar.innerHTML = `<span class="om-tag">ODDS</span> <span>No props available — game may not be posted yet.</span>${staleHtml}`;
+  }
+}
+
+function renderMeta(data) {
+  const ts = new Date(data.generated_at_unix * 1000);
+  document.getElementById('generated-at').textContent =
+    ts.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  document.getElementById('build-time').textContent = data.build_seconds + 's';
+}
+
+function renderGameStrip(game) {
+  const strip = document.getElementById('game-strip');
+  if (!game) {
+    strip.innerHTML = '<div class="game-none"><span>No Yankees game scheduled today.</span><small>Stats below show season-only model with neutral matchup.</small></div>';
+    return;
+  }
+  const homeAway = game.is_home ? 'HOME' : 'AWAY';
+  const oppPitch = game.opponent_pitcher_name || 'TBA';
+  const venue = game.venue_name || '—';
+  const w = game.weather || {};
+  const weatherStr = w.condition || w.temp ? `${w.temp || '—'}°F · ${w.condition || ''} · wind ${w.wind || '—'}` : '';
+  strip.innerHTML = `
+    <div class="game-card">
+      <div class="game-side">
+        <div class="game-tag">${homeAway}</div>
+        <div class="game-team">vs ${game.opponent_name || '—'}</div>
+      </div>
+      <div class="game-divider"></div>
+      <div class="game-side">
+        <div class="game-tag">OPP SP</div>
+        <div class="game-team">${oppPitch}</div>
+      </div>
+      <div class="game-divider"></div>
+      <div class="game-side">
+        <div class="game-tag">VENUE</div>
+        <div class="game-team game-venue">${venue}</div>
+      </div>
+      ${weatherStr ? `
+      <div class="game-divider"></div>
+      <div class="game-side">
+        <div class="game-tag">WX</div>
+        <div class="game-team game-weather">${weatherStr}</div>
+      </div>` : ''}
+      <div class="game-divider"></div>
+      <div class="game-side">
+        <div class="game-tag">STATUS</div>
+        <div class="game-team">${game.status || '—'}</div>
+      </div>
+    </div>
+  `;
+}
+
+// MIN_CONFIDENCE injected from config.py
+const MIN_CONFIDENCE = 0.8;
+
+// Persisted toggle: when on, the per-player edges table also shows rows that
+// fail the confidence/positive-edge filter (visually muted), and player cards
+// hidden by hasPositiveKelly reappear. Top Picks, parlay leg pool, and SMS
+// stay strict — this is a dashboard-only escape hatch.
+let SHOW_ALL_EDGES = (typeof localStorage !== 'undefined' && localStorage.getItem('showAllEdges') === '1');
+
+function edgePassesFilter(e) {
+  return (e.edge || 0) > 0 && (e.confidence ?? 1) >= MIN_CONFIDENCE;
+}
+
+function renderEdgesBlock(edges) {
+  if (!edges || edges.length === 0) return '';
+  // Drop mirror "wrong side" rows AND fragile (low-confidence) edges.
+  const passing = edges.filter(edgePassesFilter);
+  let top;
+  if (SHOW_ALL_EDGES) {
+    // Append non-passing rows after the passing ones, sorted by Kelly × conf.
+    const rest = edges
+      .filter(e => !edgePassesFilter(e))
+      .sort((a, b) => ((b.kelly_frac || 0) * (b.confidence || 0)) - ((a.kelly_frac || 0) * (a.confidence || 0)));
+    top = [...passing.slice(0, 6), ...rest];
+  } else {
+    if (passing.length === 0) return '';
+    top = passing.slice(0, 6);
+  }
+  // Group by best edge per (market, line, side) across books to avoid duplicates,
+  // since DK and FD will both show similar lines. We still show both books in the row.
+  const rows = top.map(e => {
+    const stakeUsd = (e.kelly_frac || 0) * BANKROLL_USD;
+    const stakeStr = stakeUsd >= 0.5 ? `$${stakeUsd.toFixed(2)}` : '—';
+    const conf = e.confidence;
+    const confTone = conf == null ? '' : conf >= 0.90 ? 'conf-strong' : conf >= 0.80 ? 'conf-mid' : 'conf-weak';
+    const confTxt = conf == null ? '—' : (conf * 100).toFixed(0) + '%';
+    const muteCls = !edgePassesFilter(e)
+      ? ((e.edge || 0) <= 0 ? ' edge-muted edge-neg' : ' edge-muted edge-lowconf')
+      : '';
+    return `
+    <tr class="${edgeClass(e.edge)}${muteCls}">
+      <td class="ed-mkt">${marketLabel(e.market)} ${e.line != null ? e.line : ''} ${e.side[0]}</td>
+      <td class="ed-book"><span class="book-pill book-${e.book}">${bookLabel(e.book)}</span></td>
+      <td class="ed-price">${fmtAmerican(e.price)}</td>
+      <td class="ed-mp">${fmt.pct(e.model_prob)}</td>
+      <td class="ed-fp">${fmt.pct(e.fair_prob)}</td>
+      <td class="ed-edge"><b>${fmtEdge(e.edge)}</b></td>
+      <td class="ed-conf ${confTone}">${confTxt}</td>
+      <td class="ed-stake">${stakeStr}</td>
+    </tr>`;
+  }).join('');
+  return `
+    <div class="edges-block">
+      <table class="edges-table">
+        <thead><tr><th>Prop</th><th>Book</th><th>Price</th><th>Model</th><th>Fair</th><th>Edge</th><th>Conf</th><th>Stake</th></tr></thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+  `;
+}
+
+function hasPositiveKelly(p) {
+  // Player has at least one edge that meets the dashboard's threshold:
+  // positive edge AND confidence ≥ MIN_CONFIDENCE.
+  // When SHOW_ALL_EDGES is on, any player with at least one edge surfaces.
+  if (SHOW_ALL_EDGES) return (p.edges || []).length > 0;
+  return (p.edges || []).some(edgePassesFilter);
+}
+
+function renderEdgeFilterToggle(players) {
+  const el = document.getElementById('edge-filter-toggle');
+  if (!el) return;
+  const real = (players || []).filter(p => !p.error && !p.skipped_reason);
+  const hiddenPlayers = real.filter(p => !(p.edges || []).some(edgePassesFilter)
+                                          && (p.edges || []).length > 0).length;
+  const hiddenEdges = real.reduce((acc, p) => {
+    const passing = (p.edges || []).filter(edgePassesFilter).length;
+    return acc + Math.max(0, (p.edges || []).length - passing);
+  }, 0);
+  if (hiddenPlayers === 0 && hiddenEdges === 0) { el.hidden = true; return; }
+  el.hidden = false;
+  const label = SHOW_ALL_EDGES
+    ? `Hide low-confidence / negative edges`
+    : `Show all edges (${hiddenEdges} hidden across ${hiddenPlayers} additional player${hiddenPlayers === 1 ? '' : 's'})`;
+  el.innerHTML = `
+    <label class="eft-pill${SHOW_ALL_EDGES ? ' is-on' : ''}">
+      <input type="checkbox" ${SHOW_ALL_EDGES ? 'checked' : ''} />
+      <span>${label}</span>
+    </label>`;
+  const cb = el.querySelector('input');
+  cb.addEventListener('change', () => {
+    SHOW_ALL_EDGES = cb.checked;
+    try { localStorage.setItem('showAllEdges', SHOW_ALL_EDGES ? '1' : '0'); } catch (_) {}
+    if (window._lastPlayers) {
+      renderPlayers(window._lastPlayers, window._lastGame || {});
+      renderEdgeFilterToggle(window._lastPlayers);
+    }
+  });
+}
+
+// Wire one parlay panel's book-price input + verdict block.
+// `panelEl` is the .tp-parlay-panel wrapper; `parlay` is { legs, summary }.
+// `selectablePool`, when provided, lets the user choose which legs (subset of size
+// parlay.summary.n_legs) drive the calculation; the indep summary, book-price
+// override, and singles-vs-parlay verdict all recompute live from the selection.
+function wireParlayPanel(panelEl, parlay, selectablePool) {
+  const override = panelEl.querySelector('.tp-parlay-override');
+  if (!override) return;
+  const input = override.querySelector('.tp-parlay-input');
+  const meta  = override.querySelector('.tp-parlay-out-meta');
+  const edgeEl = override.querySelector('.tp-parlay-out-edge');
+  const stakeEl = override.querySelector('.tp-parlay-out-stake');
+  const verdictBox = panelEl.querySelector('.tp-parlay-verdict');
+  const verdictHeadline = verdictBox?.querySelector('.tpv-headline');
+  const verdictGrade    = verdictBox?.querySelector('.tpv-grade');
+  const verdictReason   = verdictBox?.querySelector('.tpv-reason');
+  const verdictCompare  = verdictBox?.querySelector('.tpv-compare');
+  // Indep summary header elements (refreshed on selection change).
+  const summaryRow = panelEl.querySelector('.tp-parlay-summary');
+  const sumNlegs = summaryRow.querySelector('.tp-parlay-nlegs');
+  const sumPrice = summaryRow.querySelector('.tp-parlay-price');
+  const sumMeta  = summaryRow.querySelector('.tp-parlay-meta');
+  const sumEdge  = summaryRow.querySelector('.tp-parlay-edge');
+  const sumStake = summaryRow.querySelector('.tp-parlay-stake');
+  const HEADLINE_MAP = {
+    SINGLES_ARE_THE_PLAY: 'SINGLES ARE THE PLAY',
+    TAKE_THE_PARLAY:      'TAKE THE PARLAY',
+  };
+  const GRADE_CLS = {
+    GOOD:       'tpv-grade-good',
+    ACCEPTABLE: 'tpv-grade-acceptable',
+    POOR:       'tpv-grade-poor',
+    DONATION:   'tpv-grade-donation',
+    BOOSTED:    'tpv-grade-boosted',
+  };
+
+  // Mutable state — driven by chip selection if a selectablePool is supplied.
+  let currentLegs = (parlay && parlay.legs) || [];
+  let currentSummary = (parlay && parlay.summary) || null;
+
+  const refreshSummary = () => {
+    if (!currentSummary) return;
+    const s = currentSummary;
+    const sign = s.edge >= 0 ? '+' : '';
+    sumNlegs.textContent = `${s.n_legs}-leg parlay`;
+    sumPrice.textContent = fmtAmerican(s.american_odds);
+    sumMeta.textContent  = `indep. · model ${(s.model_prob*100).toFixed(1)}% · fair ${(s.fair_prob*100).toFixed(1)}%`;
+    sumEdge.textContent  = `${sign}${(s.edge*100).toFixed(1)}% edge`;
+    sumStake.textContent = `$${s.stake.toFixed(2)}`;
+  };
+
+  const hideVerdict = () => { if (verdictBox) verdictBox.hidden = true; };
+  const recompute = () => {
+    if (!currentSummary) { hideVerdict(); return; }
+    const modelProb = currentSummary.model_prob;
+    const indepDecimal = currentSummary.decimal_odds;
+    const raw = input.value.trim().replace(/^\+/, '');
+    if (!raw) {
+      meta.textContent = "enter your book's parlay price (American)";
+      edgeEl.textContent = '—'; stakeEl.textContent = '—';
+      hideVerdict();
+      return;
+    }
+    const r = parlayAtPrice(modelProb, raw, BANKROLL_USD);
+    if (!r) {
+      meta.textContent = 'invalid price';
+      edgeEl.textContent = '—'; stakeEl.textContent = '—';
+      hideVerdict();
+      return;
+    }
+    const sign = r.edge >= 0 ? '+' : '';
+    meta.textContent = `model ${(modelProb*100).toFixed(1)}% · book ${(r.implied_prob*100).toFixed(1)}%`;
+    edgeEl.textContent = `${sign}${(r.edge*100).toFixed(1)}% edge`;
+    edgeEl.style.color = r.edge > 0 ? '' : '#9a3412';
+    stakeEl.textContent = r.stake > 0 ? `$${r.stake.toFixed(2)}` : '$0.00';
+
+    const v = parlayVsSingles(currentLegs, modelProb, indepDecimal, raw, BANKROLL_USD);
+    if (v && verdictBox) {
+      verdictBox.hidden = false;
+      const headlineText = HEADLINE_MAP[v.headline] || v.headline;
+      const headlineCls  = v.headline === 'TAKE_THE_PARLAY' ? 'tpv-headline-parlay' : '';
+      verdictHeadline.className = 'tpv-headline ' + headlineCls;
+      verdictHeadline.textContent = headlineText;
+      verdictGrade.className = 'tpv-grade ' + (GRADE_CLS[v.grade] || '');
+      verdictGrade.textContent = `Parlay grade: ${v.grade}`;
+      verdictReason.textContent = v.reason;
+      const ratioPct   = (v.price_ratio * 100).toFixed(0);
+      const singlesRoi = v.singles_stake > 0 ? (v.singles_ev / v.singles_stake * 100).toFixed(1) : '0.0';
+      const parlayRoi  = v.parlay_stake  > 0 ? (v.parlay_ev  / v.parlay_stake  * 100).toFixed(1) : '0.0';
+      verdictCompare.textContent =
+        `Singles: $${v.singles_stake.toFixed(2)} stake → $${v.singles_ev.toFixed(2)} EV (${singlesRoi}% ROI) · ` +
+        `Parlay: $${v.parlay_stake.toFixed(2)} stake → $${v.parlay_ev.toFixed(2)} EV (${parlayRoi}% ROI) · ` +
+        `Book pays ${ratioPct}% of indep`;
+    } else {
+      hideVerdict();
+    }
+  };
+
+  // Wire chip selector if present. FIFO swap: clicking an OFF chip turns it ON
+  // and (if we now exceed the target count) auto-toggles the oldest ON chip
+  // OFF. Clicking an ON chip while at the minimum is a no-op (re-checks itself).
+  const picker = panelEl.querySelector('.tp-parlay-legpicker');
+  if (picker && selectablePool && currentSummary) {
+    const TARGET = currentSummary.n_legs;
+    const chips = Array.from(picker.querySelectorAll('.tp-leg-chip'));
+    const cbFor = (idx) => picker.querySelector(`.tp-leg-chip input[data-leg-idx="${idx}"]`);
+    // Track selection order with oldest at front. Initial order = pool order.
+    const initialIds = new Set((parlay.legs || []).map(legId));
+    let order = [];
+    selectablePool.forEach((lg, i) => { if (initialIds.has(legId(lg))) order.push(i); });
+    chips.forEach(label => {
+      const cb = label.querySelector('input[type="checkbox"]');
+      cb.addEventListener('change', () => {
+        const idx = Number(cb.dataset.legIdx);
+        if (cb.checked) {
+          order.push(idx);
+          label.classList.add('is-on');
+          if (order.length > TARGET) {
+            const evict = order.shift();
+            const evCb = cbFor(evict);
+            if (evCb && evCb !== cb) {
+              evCb.checked = false;
+              evCb.parentElement.classList.remove('is-on');
+            }
+          }
+        } else {
+          if (order.length <= TARGET) {
+            cb.checked = true;  // reject — must keep TARGET on
+            return;
+          }
+          order = order.filter(x => x !== idx);
+          label.classList.remove('is-on');
+        }
+        // Build legs in pool order (stable) from currently checked chips.
+        const selectedIdx = chips
+          .map(l => Number(l.querySelector('input').dataset.legIdx))
+          .filter(i => cbFor(i).checked);
+        currentLegs = selectedIdx.map(i => selectablePool[i]);
+        currentSummary = computeParlaySummary(currentLegs, BANKROLL_USD);
+        refreshSummary();
+        recompute();
+      });
+    });
+  }
+
+  refreshSummary();
+  input.addEventListener('input', recompute);
+}
+
+// Build the HTML for one parlay panel (indep summary + book-price input + verdict block).
+// When `selectablePool` is provided (e.g. the top-3 legs for the 2-leg panel), a chip
+// row is rendered above the indep summary so the user can pick which N legs to use.
+function buildParlayPanel(parlay, selectablePool) {
+  if (!parlay || !parlay.summary) return '';
+  const s = parlay.summary;
+  const edgePct = (s.edge * 100).toFixed(1);
+  const sign = s.edge >= 0 ? '+' : '';
+  let pickerHtml = '';
+  if (selectablePool && selectablePool.length > s.n_legs) {
+    const initialIds = new Set((parlay.legs || []).map(legId));
+    const chips = selectablePool.map((lg, i) => {
+      const on = initialIds.has(legId(lg));
+      return `<label class="tp-leg-chip${on ? ' is-on' : ''}">
+        <input type="checkbox" data-leg-idx="${i}" ${on ? 'checked' : ''} />
+        <span class="tp-leg-chip-num">${i + 1}</span>
+        <span class="tp-leg-chip-text">${legChipLabel(lg)}</span>
+      </label>`;
+    }).join('');
+    pickerHtml = `
+      <div class="tp-parlay tp-parlay-legpicker">
+        <span class="tp-parlay-label">choose ${s.n_legs} of ${selectablePool.length}</span>
+        <span class="tp-leg-chips">${chips}</span>
+      </div>`;
+  }
+  return `
+    <div class="tp-parlay-panel">
+      ${pickerHtml}
+      <div class="tp-parlay tp-parlay-summary">
+        <span class="tp-parlay-label tp-parlay-nlegs">${s.n_legs}-leg parlay</span>
+        <span class="tp-parlay-price">${fmtAmerican(s.american_odds)}</span>
+        <span class="tp-parlay-meta">indep. · model ${(s.model_prob*100).toFixed(1)}% · fair ${(s.fair_prob*100).toFixed(1)}%</span>
+        <span class="tp-parlay-edge">${sign}${edgePct}% edge</span>
+        <span class="tp-parlay-stake">$${s.stake.toFixed(2)}</span>
+      </div>
+      <div class="tp-parlay tp-parlay-override">
+        <span class="tp-parlay-label">at your book</span>
+        <span class="tp-parlay-input-wrap">
+          <input type="text" inputmode="numeric" class="tp-parlay-input" placeholder="+170" />
+        </span>
+        <span class="tp-parlay-meta tp-parlay-out-meta">enter your book's parlay price (American)</span>
+        <span class="tp-parlay-edge tp-parlay-out-edge">—</span>
+        <span class="tp-parlay-stake tp-parlay-out-stake">—</span>
+      </div>
+      <div class="tp-parlay-verdict" hidden>
+        <div class="tpv-headline"></div>
+        <div class="tpv-grade"></div>
+        <div class="tpv-reason"></div>
+        <div class="tpv-compare"></div>
+      </div>
+    </div>`;
+}
+
+function renderTopPicks(players, pitchers, parlay3, parlay2) {
+  // Compute the same diversified top-3 the 22:55 SMS will send, render
+  // a compact "executive summary" panel above the player cards.
+  const flat = [];
+  const all = [...(players || []), ...(pitchers || [])];
+  for (const p of all) {
+    if (p.error || p.skipped_reason) continue;
+    for (const e of (p.edges || [])) {
+      if ((e.edge || 0) <= 0) continue;
+      if ((e.confidence ?? 1) < MIN_CONFIDENCE) continue;
+      const k = (e.kelly_frac || 0);
+      const c = (e.confidence || 0);
+      const score = k * c;             // current sort key
+      const score_conf2 = k * c * c;   // candidate sort key (conf weighted ²)
+      flat.push({ player: p, edge: e, score, score_conf2 });
+    }
+  }
+  flat.sort((a, b) => b.score - a.score);
+
+  // Diversify across players (using current rank)
+  const seen = new Set();
+  const top = [];
+  for (const r of flat) {
+    if (seen.has(r.player.name)) continue;
+    seen.add(r.player.name);
+    top.push(r);
+    if (top.length >= 3) break;
+  }
+
+  // Same diversification using conf² rank — for side-by-side comparison.
+  const flatC2 = flat.slice().sort((a, b) => b.score_conf2 - a.score_conf2);
+  const seenC2 = new Set();
+  const topC2 = [];
+  for (const r of flatC2) {
+    if (seenC2.has(r.player.name)) continue;
+    seenC2.add(r.player.name);
+    topC2.push(r);
+    if (topC2.length >= 3) break;
+  }
+  // Map: player name → conf² rank position (1..3) for annotation.
+  const c2RankByPlayer = new Map();
+  topC2.forEach((r, i) => c2RankByPlayer.set(r.player.name, i + 1));
+
+  const box = document.getElementById('top-picks');
+  if (!top.length) { box.hidden = true; return; }
+  box.hidden = false;
+  const totalStake = top.reduce((s, r) => s + (r.edge.kelly_frac || 0) * BANKROLL_USD, 0);
+  const totalEv = top.reduce((s, r) => {
+    const stake = (r.edge.kelly_frac || 0) * BANKROLL_USD;
+    const dec = americanToDecimal(r.edge.price);
+    const mp = r.edge.model_prob || 0;
+    return s + stake * (mp * dec - 1);   // EV = stake * (p*dec - 1)
+  }, 0);
+
+  const rows = top.map((r, i) => {
+    const stakeUsd = (r.edge.kelly_frac || 0) * BANKROLL_USD;
+    const dec = americanToDecimal(r.edge.price);
+    const mp = r.edge.model_prob || 0;
+    const evUsd = stakeUsd * (mp * dec - 1);
+    const evClass = evUsd >= 0 ? 'ev-pos' : 'ev-neg';
+    const confRaw = r.edge.confidence;
+    const conf = Math.round((confRaw || 0) * 100);
+    // Same green/amber/red tiers as player-card .ed-conf cells.
+    const confTone = confRaw == null ? '' : confRaw >= 0.90 ? 'conf-strong' : confRaw >= 0.80 ? 'conf-mid' : 'conf-weak';
+    const c2pos = c2RankByPlayer.get(r.player.name);
+    // Show conf²-rank annotation: "✓" if same position, "→#N" if conf²
+    // ranks this pick differently, "—" if it falls out of conf² top-3.
+    let c2Tag;
+    if (c2pos == null) c2Tag = '<span class="tp-c2 tp-c2-out" title="conf² (penalises low-confidence edges harder) rejects this pick — it does not make the conf² top 3">conf² ✗</span>';
+    else if (c2pos === i + 1) c2Tag = '<span class="tp-c2 tp-c2-match" title="conf² agrees">conf² ✓</span>';
+    else c2Tag = `<span class="tp-c2 tp-c2-diff" title="conf² ranks this pick #${c2pos}">conf² #${c2pos}</span>`;
+    return `
+      <div class="tp-row">
+        <span class="tp-num">${i + 1}</span>
+        <span class="tp-player">${r.player.name}</span>
+        <span class="tp-bet">${marketLabel(r.edge.market)} ${r.edge.line != null ? r.edge.line : ''} <span class="side-full">${r.edge.side}</span><span class="side-abbrev">${(r.edge.side || '?')[0]}</span></span>
+        <span class="tp-book"><span class="book-pill book-${r.edge.book}">${bookLabel(r.edge.book)}</span></span>
+        <span class="tp-price">${fmtAmerican(r.edge.price)}</span>
+        <span class="tp-edge">${fmtEdge(r.edge.edge)}</span>
+        <span class="tp-conf ${confTone}">${conf}%</span>
+        ${c2Tag}
+        <span class="tp-stake">$${stakeUsd.toFixed(2)}</span>
+        <span class="tp-ev ${evClass}" title="Expected profit (stake × (p·dec − 1))">${evUsd >= 0 ? '+' : ''}$${evUsd.toFixed(2)}</span>
+      </div>`;
+  }).join('');
+
+  const top3Pool = (parlay3 && parlay3.legs && parlay3.legs.length >= 3) ? parlay3.legs : null;
+  const parlayHtml = buildParlayPanel(parlay3) + buildParlayPanel(parlay2, top3Pool);
+
+  const evSign = totalEv >= 0 ? '+' : '';
+  const evColor = totalEv >= 0 ? 'tp-ev-pos' : 'tp-ev-neg';
+  box.innerHTML = `
+    <div class="tp-head">
+      <span class="tp-title">Top Picks</span>
+      <span class="tp-sub">total stake $${totalStake.toFixed(2)} &nbsp;·&nbsp; expected <span class="${evColor}">${evSign}$${totalEv.toFixed(2)}</span></span>
+    </div>
+    <div class="tp-grid">${rows}</div>
+    ${parlayHtml}
+  `;
+
+  const wired = [
+    { parlay: parlay3, pool: null },
+    { parlay: parlay2, pool: top3Pool },
+  ].filter(x => x.parlay && x.parlay.summary);
+  box.querySelectorAll('.tp-parlay-panel').forEach((panelEl, i) => {
+    wireParlayPanel(panelEl, wired[i].parlay, wired[i].pool);
+  });
+}
+
+function renderPlayers(players, game = {}) {
+  const OPP_NAME = game.opponent_name || 'opp';
+  const grid = document.getElementById('players-grid');
+  if (!players.length) {
+    grid.innerHTML = '<div class="empty">No players returned.</div>';
+    return;
+  }
+  // Stash all player data in a JS Map keyed by player ID — avoids the
+  // fragility of stuffing JSON into HTML attributes.
+  window._playerMap = new Map();
+  players.forEach(p => { if (p && p.id != null) window._playerMap.set(String(p.id), p); });
+
+  // Compact mode: only render players with at least one positive-Kelly edge.
+  // Click "View model breakdown" on any card for full diagnostics still.
+  let display = players;
+  if (COMPACT_MODE) {
+    display = players.filter(p => !p.error && !p.skipped_reason && hasPositiveKelly(p));
+  }
+
+  grid.innerHTML = '';
+  if (!display.length) {
+    grid.innerHTML = '<div class="empty">No positive-Kelly edges right now. Check back closer to first pitch — lines may not be posted yet.</div>';
+    return;
+  }
+
+  display.forEach((p, i) => {
+    const card = document.createElement('article');
+    card.className = 'player-card';
+    card.style.animationDelay = (i * 40) + 'ms';
+
+    if (p.error) {
+      card.innerHTML = `<div class="card-error"><h3>${p.name}</h3><p>${p.error}</p></div>`;
+      grid.appendChild(card);
+      return;
+    }
+    if (p.skipped_reason) {
+      card.classList.add('player-card-skip');
+      card.innerHTML = `
+        <div class="card-skip">
+          <h3>${p.name} <span class="pos">${p.position || ''}</span></h3>
+          <p>${p.skipped_reason}</p>
+        </div>`;
+      grid.appendChild(card);
+      return;
+    }
+
+    const m = p.model;
+    const s = p.season;
+    const pl = p.platoon_split || {};
+    const recent = p.last_15 || {};
+
+    if (COMPACT_MODE) {
+      const isPitcher = p.kind === 'pitcher';
+      const tags = isPitcher
+        ? `<span class="tag">SP</span>
+           <span class="tag tag-hand">${p.throws || 'R'}HP</span>
+           <span class="tag tag-vs">${p.side === 'team' ? TEAM_NAME : OPP_NAME}</span>`
+        : `<span class="tag">${p.position || ''}</span>
+           <span class="tag tag-hand">${p.handedness}HB</span>
+           <span class="tag tag-vs">vs ${p.vs_pitcher_hand}HP</span>`;
+      card.innerHTML = `
+        <header class="card-head">
+          <div class="card-name">
+            <span class="card-num">${String(i + 1).padStart(2, '0')}</span>
+            <h3>${p.name}</h3>
+          </div>
+          <div class="card-tags">${tags}</div>
+        </header>
+        ${renderEdgesBlock(p.edges)}
+        <button class="diag-btn" data-pid="${p.id}">View model breakdown →</button>
+      `;
+      grid.appendChild(card);
+      return;
+    }
+
+    card.innerHTML = `
+      <header class="card-head">
+        <div class="card-name">
+          <span class="card-num">${String(i + 1).padStart(2, '0')}</span>
+          <h3>${p.name}</h3>
+        </div>
+        <div class="card-tags">
+          <span class="tag">${p.position || ''}</span>
+          <span class="tag tag-hand">${p.handedness}HB</span>
+          <span class="tag tag-vs">vs ${p.vs_pitcher_hand}HP</span>
+        </div>
+      </header>
+
+      <div class="hero-prob">
+        <div class="prob-block ${probClass(m.p_at_least_one_hit)}">
+          <div class="prob-value">${fmt.pct(m.p_at_least_one_hit)}</div>
+          <div class="prob-label">≥1 Hit</div>
+        </div>
+        <div class="prob-block ${probClass(m.p_over_1_5_tb)}">
+          <div class="prob-value">${fmt.pct(m.p_over_1_5_tb)}</div>
+          <div class="prob-label">TB &gt; 1.5</div>
+        </div>
+        <div class="prob-block ${probClass(m.p_at_least_one_hr)}">
+          <div class="prob-value">${fmt.pct(m.p_at_least_one_hr)}</div>
+          <div class="prob-label">HR</div>
+        </div>
+      </div>
+
+      <div class="exp-row">
+        <div class="exp"><span>xH</span><b>${fmt.num(m.expected_hits)}</b></div>
+        <div class="exp"><span>xTB</span><b>${fmt.num(m.expected_total_bases)}</b></div>
+        <div class="exp"><span>xHR</span><b>${fmt.num(m.expected_hrs, 3)}</b></div>
+        <div class="exp"><span>xPA</span><b>${fmt.num(m.expected_pa, 1)}</b></div>
+      </div>
+
+      <table class="ou-table">
+        <thead><tr><th>Line</th><th>0.5</th><th>1.5</th><th>2.5</th><th>3.5</th></tr></thead>
+        <tbody>
+          <tr><td>Hits over</td>
+            <td class="${probClass(m.p_over_0_5_hits)}">${fmt.pct(m.p_over_0_5_hits)}</td>
+            <td class="${probClass(m.p_over_1_5_hits)}">${fmt.pct(m.p_over_1_5_hits)}</td>
+            <td class="${probClass(m.p_over_2_5_hits)}">${fmt.pct(m.p_over_2_5_hits)}</td>
+            <td>—</td>
+          </tr>
+          <tr><td>Total bases over</td>
+            <td class="${probClass(m.p_over_0_5_tb)}">${fmt.pct(m.p_over_0_5_tb)}</td>
+            <td class="${probClass(m.p_over_1_5_tb)}">${fmt.pct(m.p_over_1_5_tb)}</td>
+            <td class="${probClass(m.p_over_2_5_tb)}">${fmt.pct(m.p_over_2_5_tb)}</td>
+            <td class="${probClass(m.p_over_3_5_tb)}">${fmt.pct(m.p_over_3_5_tb)}</td>
+          </tr>
+        </tbody>
+      </table>
+
+      ${renderEdgesBlock(p.edges)}
+
+      <div class="stats-strip">
+        <div><span>AVG</span><b>${fmt.avg(s.AVG)}</b></div>
+        <div><span>OBP</span><b>${fmt.avg(s.OBP)}</b></div>
+        <div><span>SLG</span><b>${fmt.avg(s.SLG)}</b></div>
+        <div><span>HR</span><b>${fmt.int(s.HR)}</b></div>
+        <div><span>PA</span><b>${fmt.int(s.PA)}</b></div>
+        <div><span>K%</span><b>${s['K%'] != null ? s['K%'] + '%' : '—'}</b></div>
+      </div>
+
+      <div class="splits-strip">
+        <div class="split-block">
+          <span class="split-label">vs ${p.vs_pitcher_hand}HP</span>
+          <span class="split-line">${fmt.avg(pl.avg)} / ${fmt.avg(pl.obp)} / ${fmt.avg(pl.slg)} <em>(${pl.plateAppearances || 0} PA)</em></span>
+        </div>
+        <div class="split-block">
+          <span class="split-label">Last 15</span>
+          <span class="split-line">${fmt.avg(recent.avg)} / ${fmt.avg(recent.obp)} / ${fmt.avg(recent.slg)} <em>(${recent.plateAppearances || 0} PA)</em></span>
+        </div>
+      </div>
+
+      <button class="diag-btn" data-pid="${p.id}">View model breakdown →</button>
+    `;
+    grid.appendChild(card);
+  });
+
+  // Wire up modal triggers
+  grid.querySelectorAll('.diag-btn').forEach(btn => {
+    btn.addEventListener('click', (ev) => {
+      ev.stopPropagation();
+      const p = window._playerMap.get(btn.dataset.pid);
+      if (p) showDiagnostics(p);
+    });
+  });
+}
+
+function showDiagnostics(p) {
+  const m = p.model;
+  const d = p.diagnostics || {};
+  const hit = d.hit || {};
+  const hr = d.hr || {};
+  const k = d.k || {};
+  const out = (d.per_ab_outcomes || {});
+  const w = hit.weights || {};
+
+  const html = `
+    <h2>${p.name} <span class="modal-pos">${p.position}</span></h2>
+    <p class="modal-sub">Model breakdown — every adjustment used to compute probabilities</p>
+
+    <h3>Hit rate construction</h3>
+    <table class="modal-table">
+      <tr><td>Season AVG</td><td>${fmt.avg(hit.season_avg)}</td><td>weight ${(w.season || 0).toFixed(2)}</td></tr>
+      <tr><td>Platoon AVG (vs ${p.vs_pitcher_hand}HP)</td><td>${fmt.avg(hit.platoon_avg)}</td><td>weight ${(w.platoon || 0).toFixed(2)}</td></tr>
+      <tr><td>Last 15 AVG (${fmt.int(hit.recent_pa)} PA)</td><td>${fmt.avg(hit.recent_avg)}</td><td>weight ${(w.recent || 0).toFixed(2)}</td></tr>
+      <tr><td>Statcast luck (xBA−BA)</td><td colspan="2">${hit.statcast_ba_diff == null ? '—' : (hit.statcast_ba_diff>0?'+':'') + hit.statcast_ba_diff.toFixed(3)} → lift ${hit.statcast_lift>=0?'+':''}${(hit.statcast_lift||0).toFixed(3)}</td></tr>
+      <tr class="row-result"><td><b>Blended hit prob / AB</b></td><td colspan="2"><b>${fmt.avg(hit.blended_avg)}</b></td></tr>
+    </table>
+
+    <h3>HR rate construction</h3>
+    <table class="modal-table">
+      <tr><td>Base HR/PA (season + platoon)</td><td colspan="2">${fmt.num(hr.base_rate, 4)}</td></tr>
+      <tr><td>SP HR/9 (season ⊕ recent)</td><td colspan="2">${fmt.num(hr.sp_hr_per_9, 2)}</td></tr>
+      <tr><td>Bullpen HR/9</td><td colspan="2">${hr.bp_hr_per_9 == null ? '—' : fmt.num(hr.bp_hr_per_9, 2)}</td></tr>
+      <tr><td>Effective HR/9 (61% SP / 39% pen)</td><td colspan="2">${fmt.num(hr.effective_hr_per_9, 2)}</td></tr>
+      <tr><td>Pitcher multiplier vs league</td><td colspan="2">×${fmt.num(hr.pitcher_mult, 3)}</td></tr>
+      <tr><td>Park multiplier (handed, damped)</td><td colspan="2">×${fmt.num(hr.park_mult, 3)}</td></tr>
+      <tr><td>Weather multiplier</td><td colspan="2">×${fmt.num(hr.weather_mult, 3)}</td></tr>
+      <tr><td>Statcast contact (barrel ${hr.barrel_pct == null ? '—' : hr.barrel_pct + '%'}, slg_diff ${hr.slg_diff == null ? '—' : (hr.slg_diff>0?'+':'') + hr.slg_diff.toFixed(3)})</td><td colspan="2">×${fmt.num(hr.contact_mult, 3)}</td></tr>
+      <tr class="row-result"><td><b>Final HR/PA</b></td><td colspan="2"><b>${fmt.num(hr.final, 4)}</b></td></tr>
+    </table>
+
+    <h3>K rate construction</h3>
+    <table class="modal-table">
+      <tr><td>Batter K% (season)</td><td colspan="2">${fmt.pct(k.batter_k_rate)}</td></tr>
+      <tr><td>Batter K% (last 15)</td><td colspan="2">${k.recent_k_rate == null ? '—' : fmt.pct(k.recent_k_rate)}</td></tr>
+      <tr><td>SP K% (season ⊕ recent)</td><td colspan="2">${fmt.pct(k.sp_k_rate)}</td></tr>
+      <tr><td>Bullpen K%</td><td colspan="2">${k.bp_k_rate == null ? '—' : fmt.pct(k.bp_k_rate)}</td></tr>
+      <tr><td>Combined pitcher K% (SP/pen split)</td><td colspan="2">${fmt.pct(k.pitcher_k_rate)}</td></tr>
+      <tr class="row-result"><td><b>Combined K/PA</b></td><td colspan="2"><b>${fmt.pct(k.combined_k_per_pa)}</b></td></tr>
+    </table>
+
+    <h3>Per-AB outcome probabilities</h3>
+    <table class="modal-table">
+      <tr><td>Out</td><td colspan="2">${fmt.pct(out.out)}</td></tr>
+      <tr><td>Single</td><td colspan="2">${fmt.pct(out['1B'])}</td></tr>
+      <tr><td>Double</td><td colspan="2">${fmt.pct(out['2B'])}</td></tr>
+      <tr><td>Triple</td><td colspan="2">${fmt.pct(out['3B'])}</td></tr>
+      <tr><td>Home run</td><td colspan="2">${fmt.pct(out.HR)}</td></tr>
+    </table>
+
+    <h3>Aggregated model output</h3>
+    <table class="modal-table">
+      <tr><td>Expected PA${p.lineup_spot ? ' (lineup spot ' + p.lineup_spot + ')' : ''}</td><td colspan="2">${fmt.num(m.expected_pa, 2)}</td></tr>
+      <tr><td>Expected AB</td><td colspan="2">${fmt.num(m.expected_ab, 2)}</td></tr>
+      <tr><td>Expected hits</td><td colspan="2">${fmt.num(m.expected_hits)}</td></tr>
+      <tr><td>Expected total bases</td><td colspan="2">${fmt.num(m.expected_total_bases)}</td></tr>
+      <tr><td>Expected HR</td><td colspan="2">${fmt.num(m.expected_hrs, 3)}</td></tr>
+      <tr><td>Expected K</td><td colspan="2">${fmt.num(m.expected_strikeouts, 2)}</td></tr>
+      <tr><td>Expected runs</td><td colspan="2">${fmt.num(m.expected_runs, 2)}</td></tr>
+      <tr><td>Expected RBI</td><td colspan="2">${fmt.num(m.expected_rbis, 2)}</td></tr>
+    </table>
+  `;
+  document.getElementById('modal-content').innerHTML = html;
+  document.getElementById('modal-backdrop').hidden = false;
+}
+
+function closeModal() {
+  const backdrop = document.getElementById('modal-backdrop');
+  backdrop.hidden = true;
+  document.getElementById('modal-content').innerHTML = '';
+}
+
+document.getElementById('modal-close').addEventListener('click', (e) => {
+  e.stopPropagation();
+  closeModal();
+});
+document.getElementById('modal-backdrop').addEventListener('click', (e) => {
+  if (e.target.id === 'modal-backdrop') closeModal();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') closeModal();
+});
+
+
+// Make sure modal starts closed on every page load
+closeModal();
+
+loadData();
+</script>
+</body>
+</html>
